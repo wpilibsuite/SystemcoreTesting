@@ -1,4 +1,4 @@
-# SystemCoreTesting
+# SystemcoreTesting
 Repository for Alpha and Beta testing of Systemcore and Motioncore devices
 
 Note that all updated documentation for 2027 WPILib changes, new features, etc. can be found on the '2027' version of the WPILib Docs site: https://docs.wpilib.org/en/2027/.
