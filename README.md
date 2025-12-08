@@ -8,6 +8,7 @@ Note that all updated documentation for 2027 WPILib changes, new features, etc. 
 ![SystemcoreTopHousing](https://ik.imagekit.io/llimi/controlsystem/tophousingcrop)
 
 [Systemcore Specification PDF](https://downloads.limelightvision.io/documents/systemcore_specifications_june15_2025_alpha.pdf)
+[Systemcore Cables PDF](https://downloads.limelightvision.io/documents/systemcore_motioncore_cable_specifications.pdf)
 
 >**Alpha units do not have port labels**
 ![SystemcoreUnboxing](https://ik.imagekit.io/llimi/controlsystem/scunboxing.png)
