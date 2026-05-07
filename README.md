@@ -14,7 +14,7 @@ Note that all updated documentation for 2027 WPILib changes, new features, etc. 
 >**Alpha units do not have port labels**
 ![SystemcoreUnboxing](https://ik.imagekit.io/llimi/controlsystem/scunboxing.png)
 
-## Beta Software Directory
+## Alpha/Beta Software Directory
 
 ### Tooling
 
@@ -26,8 +26,9 @@ Note that all updated documentation for 2027 WPILib changes, new features, etc. 
 
 [(BETA) Limelight Hardware Manager 2.0.7 - INTEL MAC](https://downloads.limelightvision.io/software/LimelightHardwareManager-macOS-Intel2_0_7.dmg)
 
-
 [OS Releases, Toolchain, Package Examples, Cross-Compilation Examples](https://github.com/LimelightVision/systemcore-os-public)
+
+[2027 Driver Station](https://github.com/wpilibsuite/FirstDriverStation-Public)
 
 ### Vendor Libraries
 
@@ -41,6 +42,24 @@ Note that all updated documentation for 2027 WPILib changes, new features, etc. 
 
 * [AdvantageScope 2027 Alpha](AdvantageScope.md)
 * [Elastic 2027 Alpha](Elastic.md)
+
+### Software Compatibility
+
+| Systemcore Alpha/Beta Image Version | WPILib | NI Driver Station | 2027 Driver Station |
+|---:|---|---|---|
+| <= 9 | v2027.0.0-alpha-1 or v2027.0.0-alpha-2 | Compatible | Not compatible |
+| >= 10 | >= v2027.0.0-alpha-5 | Compatible\* | Compatible |
+
+\* The NI Driver Station will continue to function with all currently released Systemcore images. Some newer Driver Station features (for example, OpMode selection and Alerts) are only available in the 2027 Driver Station and require Systemcore images >= 10 and WPILib >= v2027.0.0-alpha-5.
+
+#### Third Party Library Compatibility by WPILib Version
+
+| WPILib Version | CTRE Phoenix 6 | REVLib | ReduxLib | PathPlannerLib | ChoreoLib |
+|---|---|---|---|---|---|
+| <= v2027.0.0-alpha-2 | 25.90.0-alpha-1 or 25.90.0-alpha-2 | v2027.0.0-alpha-1 | 2027.0.0-alpha-2 | 2027.0.0-alpha-2 | 2027.0.0-alpha-1 |
+| >= v2027.0.0-alpha-5 | :x: | :x: | :x: | :x: | :x: |
+
+- :x: — No compatible release currently available for this WPILib version.
 
 ## Alpha 1 Goals
 
