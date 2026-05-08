@@ -54,10 +54,10 @@ Note that all updated documentation for 2027 WPILib changes, new features, etc. 
 
 #### Third Party Library Compatibility by WPILib Version
 
-| WPILib Version | CTRE Phoenix 6 | REVLib | ReduxLib | PathPlannerLib | ChoreoLib |
-|---|---|---|---|---|---|
-| <= v2027.0.0-alpha-2 | 25.90.0-alpha-1 or 25.90.0-alpha-2 | v2027.0.0-alpha-1 | 2027.0.0-alpha-2 | 2027.0.0-alpha-2 | 2027.0.0-alpha-1 |
-| >= v2027.0.0-alpha-5 | :x: | :x: | :x: | :x: | :x: |
+| WPILib Version | CTRE Phoenix 6 | REVLib | ReduxLib | PathPlannerLib | ChoreoLib | AdvantageKit |
+|---|---|---|---|---|---|---|
+| v2027.0.0-alpha-2 | 25.90.0-alpha-1 or 25.90.0-alpha-2 | v2027.0.0-alpha-1 | 2027.0.0-alpha-2 | 2027.0.0-alpha-2 | 2027.0.0-alpha-1 | v27.0.0-alpha-3 |
+| >= v2027.0.0-alpha-5 | :x: | :x: | :x: | :x: | :x: | :x: |
 
 - :x: — No compatible release currently available for this WPILib version.
 
