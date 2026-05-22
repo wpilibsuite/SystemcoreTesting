@@ -33,6 +33,8 @@ Note that all updated documentation for 2027 WPILib changes, new features, etc. 
 
 [2027 Driver Station](https://github.com/wpilibsuite/FirstDriverStation-Public)
 
+[A301 Details](A301.md)
+
 ### Vendor Libraries
 
 * [CTR Electronics Phoenix 6](CTR-Phoenix.md)
@@ -60,7 +62,7 @@ Note that all updated documentation for 2027 WPILib changes, new features, etc. 
 | Library | WPILib v2027.0.0-alpha-2 | WPILib v2027.0.0-alpha-5/6 |
 |---|---|---|
 | CTRE Phoenix 6 | 25.90.0-alpha-1 or 25.90.0-alpha-2 | :x: |
-| REVLib | v2027.0.0-alpha-1 | :x: |
+| REVLib | v2027.0.0-alpha-1 | v2027.0.0-alpha-2 |
 | ReduxLib | 2027.0.0-alpha-2 | :x: |
 | PathPlannerLib | 2027.0.0-alpha-2 | :x: |
 | ChoreoLib | 2027.0.0-alpha-1 | :x: |
