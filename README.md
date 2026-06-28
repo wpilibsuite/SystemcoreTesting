@@ -15,7 +15,7 @@ Note that all updated documentation for 2027 WPILib changes, new features, etc. 
 
 ## Alpha vs Beta Systemcore units
 
-Systemcore units originally shipped to teams during the initial FRC Alpha test are ALpha Systemcore units.  Units shipped to FTC Alpha testing teams are Beta Systemcore units.
+Systemcore units originally shipped to teams during the initial FRC Alpha test are Alpha Systemcore units.  Units shipped to FTC Alpha testing teams are Beta Systemcore units.
 
 | Alpha Systemcore | Beta Systemcore |
 |---|---|
@@ -155,10 +155,6 @@ Update to the latest stable release to get started.
 5. Open the Driver Station software and configure it with a matching team number
 6. The Driver Station should establish communications with Systemcore at this point:
    ![](https://ik.imagekit.io/llimi/controlsystem/dsconnectivity.png)
-
-### Wi-Fi Configuration
-
-Release 157 selects a default Wi-Fi channel. This is causing issues in some environments due to interference. Change the channel configuration to 'auto' and set the frequency band to 5GHz for better connectivity.
 
 ### Deploying Your First Robot Program to Systemcore (C++/Java)
 
