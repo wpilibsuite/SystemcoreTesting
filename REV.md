@@ -71,18 +71,21 @@ Refer to [WPILib Docs](https://docs.wpilib.org/en/stable/docs/software/vscode-ov
 
 ### A301
 
-To get the latest version of A301 firmware in RHC2, add the code `a301-alpha` in the Downloads tab.
+The recommend method to update the A301 firmware is through REV Hardware Client 2 running directly on Systemcore. Since Systemcore will likely not be connected to internet, you will need to upload the firmware file to RHC2 using the dialog:
+
+![A301 update on systemcore](A301_Update.png)
 
 Direct firmware downloads for updating via Systemcore:
 
 - [A301 v2027.0.0-prerelease.14](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/a301-27.0.0-prerelease.14/a301_27_0_0_prerelease_14.dfu)
-
 - [A301 v2027.0.0-prerelease.12](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/a301-27.0.0-prerelease.12/a301_27_0_0_prerelease_12.dfu)
-
 - [A301 v2027.0.0-prerelease.11](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/a301-27.0.0-prerelease.11/a301_27_0_0_prerelease_11.dfu)
 
+> [!NOTE]
+> The firmware can also be updated from RHC2 on desktop, but a bridging device (SPARK Flex, PDH, etc) is **required** for this method. To get the latest version of A301 firmware in RHC2, enter the following code in the "Downloads" tab of RHC2: `a301-alpha`
+
 <details>
-<summary>Changelog</summary>
+<summary>A301 Frimware Changelog</summary>
 
 #### 2027.0.0-prerelease.14
 
