@@ -85,7 +85,7 @@ Direct firmware downloads for updating via Systemcore:
 > The firmware can also be updated from RHC2 on desktop, but a bridging device (SPARK Flex, PDH, etc) is **required** for this method. To get the latest version of A301 firmware in RHC2, enter the following code in the "Downloads" tab of RHC2: `a301-alpha`
 
 <details>
-<summary>A301 Frimware Changelog</summary>
+<summary>A301 Firmware Changelog</summary>
 
 #### 2027.0.0-prerelease.14
 
