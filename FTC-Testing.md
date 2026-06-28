@@ -59,7 +59,7 @@ A solution for controlling Systemcore using Driver Hub is still in development. 
 You may also wish to disconnect the USB and connect to the Systemcore Wifi to verify DS connection over WiFi before proceeding.
 
 > [!IMPORTANT]
-> Running the new Driver Station software of the REV Driver Hub is expected to be the only legal control method at events; the PC release is not expected to ever be competition-legal in FTC. Additionally, the new Driver Station will **not** run on Android, including the phones legal for use with the legacy system.
+> Running the new Driver Station software on the REV Driver Hub is expected to be the only legal control method at events; the PC release is not expected to be competition-legal in FTC. Additionally, the new Driver Station will **not** run on Android, including the phones legal for use with the legacy system.
 
 #### First example program
 We’ll be working on resources for understanding WPILib and differences with the FTC SDK shortly, but first we want to deploy a simple sample program to verify that everything is configured and wired correctly.
