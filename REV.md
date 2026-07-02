@@ -12,8 +12,21 @@ https://software-metadata.revrobotics.com/REVLib-2027.json
 
 Refer to [WPILib Docs](https://docs.wpilib.org/en/stable/docs/software/vscode-overview/3rd-party-libraries.html) about installing 3rd party libraries.
 
+> [!NOTE]
+> REVLib v2027.0.0-alpha-4 requires A301 v27.0.0-prerelease.15 or later.
+
 <details>
 <summary>Changelog</summary>
+
+### REVLib v2027.0.0-alpha-4
+
+- [REVLib] Removes deprecated functions
+- [REVLib] Fixes links in documentation
+- [REVLib] Fixes Sim classes to include CAN Bus ID in name
+- [A301] - Adds new A301-specific CAN specifications
+- [A301] - Removed isContinuous argument from setAbsolutePosition(); replaced with (En/Dis)ableAbsolutePositionContinuousInput()
+- [A301] - Adds a setRelativePositionWithSpeed() and setAbsolutePositionWithSpeed() to run position closed loop control with a speed constraint
+- [A301] - Updates A301(int busId) constructor to autodetect the device ID instead of requiring the device to be the factory default value of 3
 
 ### REVLib v2027.0.0-alpha-3
 
@@ -38,10 +51,35 @@ Refer to [WPILib Docs](https://docs.wpilib.org/en/stable/docs/software/vscode-ov
 
 [RHC2 for Desktop](https://alpha.rhc2.revrobotics.com/download-site/download.html)
 
-[RHC2 IPK for Systemcore](https://alpha.rhc2.revrobotics.com/download-site/debian/rev-robotics-rev-hardware-client-alpha_1.1.1_arm64.ipk) - Install this by clicking "Add Package" on the home screen of Systemcore and selecting this file. It will take a minute or so to start up.
+[RHC2 IPK for Systemcore](https://alpha.rhc2.revrobotics.com/download-site/debian/rev-robotics-rev-hardware-client-alpha_1.2.1_arm64.ipk) - Install this by clicking "Add Package" on the home screen of Systemcore and selecting this file. It will take a minute or so to start up.
 
 <details>
 <summary>Changelog</summary>
+
+## RHC2 1.2.1
+
+- Adds support for new A301 CAN specification introduced in firmware version 27.0.0-prerelease.15
+- Adds ability to specify a speed for position control in A301's run utility
+- Adds a toggle on the Motioncore card to override the robot program to run motors without a driver station
+- Adds gearbox and motor health status cards for A301
+- Fixes devices not showing up on the Hardware page in Safari
+
+## RHC2 1.2.0
+
+- Adds support for REV FTC devices (Control Hub, Expansion Hub, Driver Hub, Driver Station Phone)
+- Adds support for CAN Encoder Adapter
+- Adds search bar for signals on Telemetry page
+- Adds search bar for SPARK configuration tab
+- Adds relative encoder utility to MAXSpline Encoder
+- Fixes sidebar on telemetry expanding when a device has an alert in either run tab
+- Fixes issue reporting
+- Fixes issue where signals would freeze after closing a device
+- Fixes issue with A301 CAN ID change not persisting
+- Fixes issue where firmware versions sometimes do not populate in the update page
+
+### Known Issues
+
+- When connecting to a Control Hub via Wi-Fi, no other computer will be able to see the Control Hub until it is power cycled. The same laptop can continue to see and use the Control Hub even if it reconnects or RHC2 is reopened.
 
 ## RHC2 1.1.1
 
@@ -77,15 +115,28 @@ The recommend method to update the A301 firmware is through REV Hardware Client 
 
 Direct firmware downloads for updating via Systemcore:
 
-- [A301 v2027.0.0-prerelease.14](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/a301-27.0.0-prerelease.14/a301_27_0_0_prerelease_14.dfu)
-- [A301 v2027.0.0-prerelease.12](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/a301-27.0.0-prerelease.12/a301_27_0_0_prerelease_12.dfu)
-- [A301 v2027.0.0-prerelease.11](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/a301-27.0.0-prerelease.11/a301_27_0_0_prerelease_11.dfu)
+- [A301 v2027.0.0-prerelease.15](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/a301-27.0.0-prerelease.15/a301_27_0_0_prerelease_15.dfu)
+
+> [!IMPORTANT]
+> It is highly recommended to update to RHC2 1.2.1 on the Systemcore before updating to A301 27.0.0-prerelease.15, as it handles the transition from the previous spec to the new one.
 
 > [!NOTE]
 > The firmware can also be updated from RHC2 on desktop, but a bridging device (SPARK Flex, PDH, etc) is **required** for this method. To get the latest version of A301 firmware in RHC2, enter the following code in the "Downloads" tab of RHC2: `a301-alpha`
 
 <details>
 <summary>A301 Firmware Changelog</summary>
+
+#### 2027.0.0-prerelease.15
+
+- New A301 protocol
+- Fix for deceleration asymmetry in voltage mode
+- Enabled configurable status periods
+- Settings save automatically
+- Faster eeprom saving
+- Better rotor estimation during stall
+- Added gearbox and motor life handlers
+- Added user velocity limit during position control
+- Added support for MRC override to run without a driver station
 
 #### 2027.0.0-prerelease.14
 
@@ -102,6 +153,15 @@ Direct firmware downloads for updating via Systemcore:
 #### 2027.0.0-prerelease.11
 
 Initial release for A301
+
+</details>
+
+<details>
+<summary>Older downloads (not compatible with REVLib 2027.0.0-alpha-4 or later)</summary>
+
+- [A301 v2027.0.0-prerelease.14](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/a301-27.0.0-prerelease.14/a301_27_0_0_prerelease_14.dfu)
+- [A301 v2027.0.0-prerelease.12](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/a301-27.0.0-prerelease.12/a301_27_0_0_prerelease_12.dfu)
+- [A301 v2027.0.0-prerelease.11](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/a301-27.0.0-prerelease.11/a301_27_0_0_prerelease_11.dfu)
 
 </details>
 
