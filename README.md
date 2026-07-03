@@ -66,7 +66,7 @@ Systemcore units originally shipped to teams during the initial FRC Alpha test a
 | CTRE Phoenix 6 | 25.90.0-alpha-1 or 25.90.0-alpha-2 | v26.50.0-alpha-1 |
 | REVLib | v2027.0.0-alpha-1 | v2027.0.0-alpha-2 |
 | ReduxLib | 2027.0.0-alpha-2 | :x: |
-| PathPlannerLib | 2027.0.0-alpha-2 | :x: |
+| PathPlannerLib | 2027.0.0-alpha-2 | v2027.0.0-alpha-3 |
 | ChoreoLib | 2027.0.0-alpha-1 | :x: |
 | AdvantageKit | v27.0.0-alpha-3 | v27.0.0-alpha-4 |
 
