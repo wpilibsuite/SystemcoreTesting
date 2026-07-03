@@ -1,5 +1,8 @@
 # REV Alpha Software for 2027
 
+> [!NOTE]
+> If you are testing the A301, see [A301.md](A301.md) for everything you need: firmware downloads, version compatibility, and getting started with the API.
+
 ## REVLib
 
 REVLib should be available in the vendor dependencies of WPILib VS Code, but you can also use this JSON URL directly:
@@ -8,12 +11,12 @@ REVLib should be available in the vendor dependencies of WPILib VS Code, but you
 https://software-metadata.revrobotics.com/REVLib-2027.json
 ```
 
-[Offline Install](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/revlib-2027.0.0-alpha-3/REVLib-offline-v2027.0.0-alpha-3.zip)
+[Offline Install](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/revlib-2027.0.0-alpha-4/REVLib-offline-v2027.0.0-alpha-4.zip)
 
 Refer to [WPILib Docs](https://docs.wpilib.org/en/stable/docs/software/vscode-overview/3rd-party-libraries.html) about installing 3rd party libraries.
 
 > [!NOTE]
-> REVLib v2027.0.0-alpha-4 requires A301 v27.0.0-prerelease.15 or later.
+> REVLib version requirements for A301 firmware are listed in [A301.md](A301.md).
 
 <details>
 <summary>Changelog</summary>
@@ -109,61 +112,7 @@ Refer to [WPILib Docs](https://docs.wpilib.org/en/stable/docs/software/vscode-ov
 
 ### A301
 
-The recommend method to update the A301 firmware is through REV Hardware Client 2 running directly on Systemcore. Since Systemcore will likely not be connected to internet, you will need to upload the firmware file to RHC2 using the dialog:
-
-![A301 update on systemcore](A301_Update.png)
-
-Direct firmware downloads for updating via Systemcore:
-
-- [A301 v2027.0.0-prerelease.15](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/a301-27.0.0-prerelease.15/a301_27_0_0_prerelease_15.dfu)
-
-> [!IMPORTANT]
-> It is highly recommended to update to RHC2 1.2.1 on the Systemcore before updating to A301 27.0.0-prerelease.15, as it handles the transition from the previous spec to the new one.
-
-> [!NOTE]
-> The firmware can also be updated from RHC2 on desktop, but a bridging device (SPARK Flex, PDH, etc) is **required** for this method. To get the latest version of A301 firmware in RHC2, enter the following code in the "Downloads" tab of RHC2: `a301-alpha`
-
-<details>
-<summary>A301 Firmware Changelog</summary>
-
-#### 2027.0.0-prerelease.15
-
-- New A301 protocol
-- Fix for deceleration asymmetry in voltage mode
-- Enabled configurable status periods
-- Settings save automatically
-- Faster eeprom saving
-- Better rotor estimation during stall
-- Added gearbox and motor life handlers
-- Added user velocity limit during position control
-- Added support for MRC override to run without a driver station
-
-#### 2027.0.0-prerelease.14
-
-- Fixes sensor faults not detected in voltage modes
-- Fixes false failed gearbox detection
-
-#### 2027.0.0-prerelease.12
-
-- Fixes status periods
-- Improves voltage control
-- Replaces output current on status0 with improved average motor current
-- Improves applied output reporting
-
-#### 2027.0.0-prerelease.11
-
-Initial release for A301
-
-</details>
-
-<details>
-<summary>Older downloads (not compatible with REVLib 2027.0.0-alpha-4 or later)</summary>
-
-- [A301 v2027.0.0-prerelease.14](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/a301-27.0.0-prerelease.14/a301_27_0_0_prerelease_14.dfu)
-- [A301 v2027.0.0-prerelease.12](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/a301-27.0.0-prerelease.12/a301_27_0_0_prerelease_12.dfu)
-- [A301 v2027.0.0-prerelease.11](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/a301-27.0.0-prerelease.11/a301_27_0_0_prerelease_11.dfu)
-
-</details>
+A301 firmware downloads, update instructions, and the firmware changelog can be found in [A301.md](A301.md).
 
 ### Misc
 
