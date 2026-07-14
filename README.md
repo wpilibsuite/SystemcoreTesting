@@ -44,6 +44,7 @@ Systemcore units originally shipped to teams during the initial FRC Alpha test a
 * [AdvantageKit](AdvantageKit.md)
 * [ChoreoLib](ChoreoLib.md)
 * [PathPlannerLib](PathPlannerLib.md)
+* [ThriftyLib](ThriftyLib.md)
 
 ### Other
 
@@ -69,6 +70,7 @@ Systemcore units originally shipped to teams during the initial FRC Alpha test a
 | PathPlannerLib | 2027.0.0-alpha-2 | v2027.0.0-alpha-3 |
 | ChoreoLib | 2027.0.0-alpha-1 | :x: |
 | AdvantageKit | v27.0.0-alpha-3 | v27.0.0-alpha-4 |
+| ThriftyLib | :x: | v2027.0.0-alpha-1 |
 
 - :x: — No compatible release currently available for this WPILib version.
 
