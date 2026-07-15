@@ -108,8 +108,6 @@ For Beta units, hold down the Config button while powering the unit with USB con
 Update to the latest stable release to get started.
 
 [Systemcore Flash Tutorial Video (60s)](https://player.vimeo.com/video/1095423117)
-<details>
-<summary>Flashing OS Updates (Windows, macOS)</summary>
 
 1. Download the latest release from the [systemcore-os-public repository](https://github.com/LimelightVision/systemcore-os-public). Make sure to grab the correct one for your hardware revision (alpha or beta)
 2. Make sure the latest Limelight Hardware Manager is installed (see [Tooling](#tooling) above)
@@ -121,31 +119,8 @@ Update to the latest stable release to get started.
 7. Click the “Flash” Button after it starts flashing. Full system images will take several minutes to flash.
 8. Once complete, remove USB and power from Systemcore
 
-</details>
-
-<details>
-<summary>Flashing OS Updates (Ubuntu/Debian)</summary>
-
-1. Download the latest release from the [systemcore-os-public repository](https://github.com/LimelightVision/systemcore-os-public). Make sure to grab the correct one for your hardware revision (alpha or beta)
-2. Download [Balena Etcher](https://etcher.balena.io/)
-3. Spin-up RPIBoot:
-    ```bash
-    apt update
-    apt install libusb-1.0-0-dev pkg-config build-essential
-    git clone --recurse-submodules --shallow-submodules --depth=1 https://github.com/raspberrypi/usbboot
-    cd usbboot
-    make
-    cd mass-storage-gadget64
-    sudo ../rpiboot -d .
-    ```
-4. Boot Systemcore into Flash Mode (see [Flash Mode](#flash-mode) section above)
-5. Flash with Etcher. Full system images will take several minutes to flash.
-6. Once complete, remove USB and power from Systemcore
-
-</details>
-
 > [!NOTE]
-> The new Hardware Manager will soon be fully cross-platform. Also, a browser-based OS update procedure is in development.
+> A browser-based OS update procedure is in development.
 
 ### Accessing the Web Interface and Setting Your Team Number
 
