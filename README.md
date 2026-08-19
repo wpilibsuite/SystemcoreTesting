@@ -61,7 +61,7 @@ Systemcore units originally shipped to teams during the initial FRC Alpha test a
 \* The NI Driver Station will continue to function with all currently released Systemcore images. Some newer Driver Station features (for example, OpMode selection and Alerts) are only available in the 2027 Driver Station and require Systemcore images >= 10 and WPILib >= v2027.0.0-alpha-5.
 
 > [!IMPORTANT]
-> If you plan to use Systemcore at an offseason event, check with the offseason event to see if the version of FMS they are using is compatible with the FIRST Driver Station or not. 
+> If you plan to use Systemcore at an offseason event, check with the offseason event to see if the version of FMS they are using is compatible with the FIRST Driver Station or not.
 
 #### Third Party Library Compatibility by WPILib Version
 
@@ -100,6 +100,9 @@ For Alpha units, connect your Systemcore to your robot's power distribution boar
 > Do not use both power inputs on Alpha units (Bridge + Weidmuller) simultaneously.
 
 For Beta units, the only way to power is through the MicroFit Pwr/Bridge port. If using Motioncore, connect the Pwr/Bridge port on Systemcore to the Bridge port on Motioncore using one of the provided Microfit cables. If using Expansion Hubs or raw power, use the MicroFit to XT30 cable included in your kit. (If you need raw wires, either cut off the XT30 or buy an XT30 extension cable off of Amazon and cut the wires off of that.)
+
+> [!CAUTION]
+> Do not use a regulator to power the device. It expects to receive battery voltage directly. Some regulators (such as the VRM) cannot provide enough power to the device under full load.
 
 ### Flash Mode
 
