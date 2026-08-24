@@ -2,6 +2,31 @@
 
 **Downloads for the 2027 alpha releases of AdvantageScope can be found [here](https://github.com/Mechanical-Advantage/AdvantageScope/releases) (find the first release with version v27.0.0-alpha-X).** The changelog below lists the available releases along with related compatibility information. See also the [known issues](#known-issues) section below.
 
+### [v27.0.0-alpha-6](https://github.com/Mechanical-Advantage/AdvantageScope/releases/tag/v27.0.0-alpha-6)
+
+- Updated Driver Station keys to new layout ([#550](https://github.com/Mechanical-Advantage/AdvantageScope/pull/550), @ThadHouse)
+- Added preference for timestamp display mode (see the "Timestamps" documentation page)
+- Updated WPILib NetworkTables layout for new table name ([allwpilib#9047](https://github.com/wpilibsuite/allwpilib/pull/9047))
+- Added support for units of power
+- Added support for ANSI escape sequences in console tab
+- Improved rendering of large timestamp values in the line graph and timeline
+- Updated boolean values in sidebar to differentiate without color
+- Updated sidebar background when reduced transparency mode is active
+- Disabled 3D field animations when reduced motion mode is active
+- Added backwards compatibility for downloading logs from the roboRIO
+- Added alpha/beta feedback button to AdvantageScope Lite
+- Disabled alpha/beta expiration logic in AdvantageScope Lite for the FIRST Driver Station
+- Changed default robot address to `robot.local`
+- Added placeholder text to the robot log path preference
+- Fixed a bug sometimes causing Driver Station console text to fail to load
+- Fixed cancel button for unit conversion popup in AdvantageScope lite
+- Fixed visual glitches with timeline mark opacity
+- Fixed loading animation for AdvantageScope Lite
+- Fixed a bug causing the robot mode to briefly render incorrectly when loading a log file
+- Fixed parsing of `SwerveModuleVelocity` ([#553](https://github.com/Mechanical-Advantage/AdvantageScope/pull/553), @blaze-developer)
+- Fixed support for mDNS robot addresses when downloading logs
+- Fixed tabbing controls in the source list help window
+
 ### [v27.0.0-alpha-5](https://github.com/Mechanical-Advantage/AdvantageScope/releases/tag/v27.0.0-alpha-5)
 
 - Added AdvantageScope Lite for the FIRST Driver Station with simplified features and a built-in layout ([#543](https://github.com/Mechanical-Advantage/AdvantageScope/pull/543))
