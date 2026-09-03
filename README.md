@@ -56,7 +56,8 @@ Systemcore units originally shipped to teams during the initial FRC Alpha test a
 | Systemcore Alpha/Beta Image Version | WPILib | NI Driver Station | 2027 Driver Station |
 |---:|---|---|---|
 | <= 9 | v2027.0.0-alpha-1 or v2027.0.0-alpha-2 | Compatible | Not compatible |
-| >= 10 | >= v2027.0.0-alpha-5 | Compatible\* | Compatible |
+|10-13 |  v2027.0.0-alpha-5/6 | Compatible\* | Compatible |
+| >= 14 | >= v2027.0.0-alpha-7 | Compatible\* | Compatible |
 
 \* The NI Driver Station will continue to function with all currently released Systemcore images. Some newer Driver Station features (for example, OpMode selection and Alerts) are only available in the 2027 Driver Station and require Systemcore images >= 10 and WPILib >= v2027.0.0-alpha-5.
 
@@ -65,15 +66,15 @@ Systemcore units originally shipped to teams during the initial FRC Alpha test a
 
 #### Third Party Library Compatibility by WPILib Version
 
-| Library | WPILib v2027.0.0-alpha-2 | WPILib v2027.0.0-alpha-5/6 |
-|---|---|---|
-| CTRE Phoenix 6 | 25.90.0-alpha-1 or 25.90.0-alpha-2 | v26.50.0-alpha-1 |
-| REVLib | v2027.0.0-alpha-1 | v2027.0.0-alpha-2 |
-| ReduxLib | v2027.0.0-alpha-2 | v2027.0.0-alpha-6 |
-| PathPlannerLib | 2027.0.0-alpha-2 | v2027.0.0-alpha-3 |
-| ChoreoLib | 2027.0.0-alpha-1 | :x: |
-| AdvantageKit | v27.0.0-alpha-3 | v27.0.0-alpha-4 |
-| ThriftyLib | :x: | v2027.0.0-alpha-1 |
+| Library | WPILib v2027.0.0-alpha-2 | WPILib v2027.0.0-alpha-5/6 |  WPILib v2027.0.0-alpha-7
+|---|---|---|---|
+| CTRE Phoenix 6 | 25.90.0-alpha-1 or 25.90.0-alpha-2 | v26.50.0-alpha-1 | :x: |
+| REVLib | v2027.0.0-alpha-1 | v2027.0.0-alpha-2 | :x: |
+| ReduxLib | v2027.0.0-alpha-2 | v2027.0.0-alpha-6 | :x: |
+| PathPlannerLib | 2027.0.0-alpha-2 | v2027.0.0-alpha-3 | :x: |
+| ChoreoLib | 2027.0.0-alpha-1 | :x: | :x: |
+| AdvantageKit | v27.0.0-alpha-3 | v27.0.0-alpha-4 | v27.0.0-alpha-5 |
+| ThriftyLib | :x: | v2027.0.0-alpha-1 | :x: |
 
 - :x: — No compatible release currently available for this WPILib version.
 
