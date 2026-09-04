@@ -1,44 +1,70 @@
 Vision support is under active development. There may be bugs or unfinished features.
 
-# Limelight Lib Vendordep
+# LimelightLib 2 Vendordep
 
-https://limelightvision.github.io/limelightlib-public/LimelightLib.json
+| Systemcore OS | WPILib | Vendordep URL |
+|---|---|---|
+| Alpha 14 / Beta 14 and newer | 2027 alpha 7 and newer | https://limelightvision.github.io/limelightlib-public/LimelightLib-alpha7.json |
+| Alpha 13 / Beta 13 and older | 2027 alpha 5 and alpha 6 | https://limelightvision.github.io/limelightlib-public/LimelightLib-alpha5-6.json |
 
-# Limelight 2027.0 Beta Camera Images
+### API reference
+
+https://limelightvision.github.io/limelightlib-public/docs/
+
+# Limelight 2027.0 Beta Smart Camera Images
 
 https://drive.google.com/drive/folders/1NwZB1yKtuCkDpp5WSTrInyImtRlClsnv?usp=sharing
 
-# Limelight 2027.0 Beta Migration Guide
+On Systemcore, vision is built-in. Plug in a USB camera, navigate to the cameras tab, and you'll see a live stream tile. Click the tile to go to the Pipeline editor for that vision instance.
 
-Breaking changes TLDR:
+# LimelightLib 2 Concepts
 
-1. All results are sent via a single messagepack topic in NetworkTables. The original NT API can be enabled per-pipeline in the pipeline output tab.
+**Cameras and vision instances.** A `Limelight` object talks to one camera by its NetworkTables name. Limelight hardware defaults to `limelight`. Systemcore runs up to four USB vision instances, `limelightsc0` through `limelightsc3`, one per USB port, exposed as `Limelight.SYSTEMCORE_USB0` through `SYSTEMCORE_USB3`. Set the camera's position in robot space in the constructor.
 
-2. A single robot-orientation update (posted to a new limelightshared NT table) can feed every camera using MegaTag2.
+```java
+Limelight camera = new Limelight();                                // Limelight hardware, "limelight"
+//Limelight camera = new Limelight("limelight");
+//Limelight camera = new Limelight(Limelight.SYSTEMCORE_USB0);     // Systemcore USB, "limelightsc0"
+//Limelight camera = new Limelight(Limelight.SYSTEMCORE_USB1);
+//Limelight camera = new Limelight("limelight", new Pose3d(0.30, 0.0, 0.20, new Rotation3d())); // with camera pose in robot space
+```
 
-3. LimelightLib 2 introduces an object-oriented API with built-in pose filtering and trust scaling. Telemetry for accepted and rejected pose estimates is enabled by default, allowing those estimates and related statistics to be visualized in AdvantageScope, Elastic, and Glass.
+**Results envelope and camera health.** Every frame arrives as one MessagePack envelope, so every value from `getLatestResults()` comes from the same frame. `getStatus()` reports `OK`, `NO_DATA`, `STALE` (no frame within 0.25 s, adjustable with `withStaleFrameThreshold`), or `DECODE_ERROR`. `hasTarget()` is false when the camera is stale, so a disconnected camera never drives the robot with old data.
 
-## Quick start
+```java
+Limelight camera = new Limelight()
 
-### Visual servoing
+// Each loop
+if (camera.hasTarget()) {                   
+    var results = camera.getLatestResults();
+}
+```
+
+**Visual servoing.** Aim with `getTXDegrees()`, `getTYDegrees()`, and `getTargetAreaPercent()` (0 to 100). The pipeline picks the primary target. `setPriorityTagIDOverride(id)` makes one AprilTag primary regardless of size or position, and `clearPriorityTagIDOverride()` hands selection back to the pipeline. Using getters like getTXDegrees() will internally call getLatestResults() and parse new msgpack envelopes only when there is new data.
 
 ```java
 double turnKp = -0.02;
 Limelight camera = new Limelight();
-//Limelight camera = new Limelight("limelight");
-//Limelight camera = new Limelight(Limelight.SYSTEMCORE_USB0);
-//Limelight camera = new Limelight(Limelight.SYSTEMCORE_USB1);
-
 
 // Each loop
+double forward = joystick.getLeftY();
 double turn = joystick.getRightX();
+bool aimingEnabled = joystick.getRightShoulderButton();//pseudocode
 if(aimingEnabled && camera.hasTarget()){
      turn = turnKp * camera.getTXDegrees();
 }
-arcadeDrive(forward, turn); // pseudocode (todo)
+arcadeDrive(forward, turn);
 ```
 
-### MegaTag1 localization
+**Coordinate systems.** All 3D data is right-handed NWU: X forward, Y left, Z up, in field, robot, camera, and target space (the target's own frame, X out of the tag face). Pose arrays are `[x, y, z, roll, pitch, yaw]` in meters and degrees. Accessors like `getCameraPose_TargetSpace()` return `Pose3d`. 2D targeting keeps the classic Limelight optical convention (cam looks down -Z).
+
+```java
+// NWU, right-handed: X forward, Y left, Z up. Meters and degrees.
+Pose3d cameraPoseTargetSpace = camera.getCameraPose_TargetSpace(); // X out of the tag face
+double distanceToTagMeters = cameraPoseTargetSpace.getTranslation().getNorm();
+```
+
+**Localization: MegaTag1 and MegaTag2.** Both produce a robot pose in field space from visible AprilTags. MT1 solves position and heading from tag geometry alone, so it needs no robot input but is sensitive to single-tag ambiguity and distance. MT2 takes your robot heading and solves only for position, which is far more stable, especially with one tag, and requires you to publish robot yaw every loop. Estimate types name the algorithm and origin: `MT1_WPIBLUE`, `MT1_WPIRED`, `MT2_WPIBLUE`, `MT2_WPIRED`.
 
 ```java
 Pose3d cameraPoseRobotSpace = new Pose3d(0.30, 0.0, 0.20, new Rotation3d());
@@ -51,7 +77,7 @@ for (var estimate : camera.readAcceptedPoseEstimates(Limelight.PoseEstimateType.
 }
 ```
 
-### MegaTag2 localization
+**Robot orientation.** `Limelight.setSharedRobotOrientation(yawDegrees)` publishes your pose estimator's heading (not the raw gyro) to the `limelightshared` table, and every camera reads it. A turret camera can use its own value: `setRobotOrientation(yaw, flush)` opts it out of the shared orientation, `setUseSharedOrientation(true)` opts it back in.
 
 Publish robot yaw before reading the queue each robot loop.
 
@@ -66,13 +92,37 @@ for (var estimate : camera.readAcceptedPoseEstimates(Limelight.PoseEstimateType.
 }
 ```
 
-### Configured MegaTag1 and MegaTag2
+**Camera pose in robot space.** Comes from the web UI or from code. The `Pose3d` constructor or `setCameraPose_RobotSpaceOverride(pose, flush)` overrides the UI and can update every loop for a camera on an elevator or turret. `clearCameraPose_RobotSpaceOverride()` returns to the UI value. An all-zero pose is the clear value. The UI shows when code controls the pose.
+
+```java
+Pose3d cameraPoseRobotSpace = new Pose3d(0.30, 0.0, 0.20, new Rotation3d()); // 0.30 m forward, 0.20 m up, level
+Limelight camera = new Limelight("limelight", cameraPoseRobotSpace);
+
+// Camera on an elevator: update every loop
+camera.setCameraPose_RobotSpaceOverride(new Pose3d(0.30, 0.0, 0.20 + elevatorHeightMeters, new Rotation3d()), false);
+
+// Back to the web UI value
+camera.clearCameraPose_RobotSpaceOverride();
+```
+
+**Reading pose estimates.** The camera queues up to 20 frames between loops. Drain the queue every loop. `readAcceptedPoseEstimates(type)` returns only estimates that passed every check. `readPoseEstimateQueue(type)` returns everything with rejection reasons. `readResultsQueue()` returns raw envelopes. Use one queue method per camera per frame. Each latency-compensated `PoseEstimate` carries `pose`, a `timestampSeconds`, fusion-ready `stdDevs` (see `PoseEstimateConfig`), tag count, distance, area, and `rejectionFlags`. `PoseEstimateConfig.describeRejection(flags)` prints reasons like `TAG_COUNT|AMBIGUITY`.
+
+```java
+// Each robot loop. Use one queue method per camera per frame.
+// readAcceptedPoseEstimates (see Localization) is the fusion path. This one is for diagnostics.
+for (var estimate : camera.readPoseEstimateQueue(Limelight.PoseEstimateType.MT2_WPIBLUE)) {
+    System.out.println(estimate.pose + " " + Limelight.PoseEstimateConfig.describeRejection(estimate.rejectionFlags)); // e.g. TAG_COUNT|AMBIGUITY
+}
+```
+
+**Filtering and trust scaling.** A `PoseEstimateConfig` decides what is accepted and how much it is trusted. One per algorithm (MegaTag1 vs MegaTag2), via `withPoseEstimateConfig_MT1` and `_MT2`. Every camera starts with `defaultMT1()` and `defaultMT2()`, reasonable starting points rather than tuned values. Gates: min tag count, max single-tag ambiguity, max single-tag distance, max average distance, min average area, field bounds with margin (0 disables a gate). Trust: XY standard deviation starts at a base, scales with distance to an exponent (1 linear, 0.5 square root, 0 off), divides by tag count to an exponent, then clamps. Heading defaults to `UNTRUSTED` so vision heading is ignored. Configs are copied on attach. The Configured example below sets every term.
 
 This example configures every filter and standard-deviation scaling term.
-XY uncertainty scales linearly with distance, divides by the square root of
-fielded tag count, and is clamped to 0.0001-2.0 meters. Vision heading is not
-fused. The field bounds are for the 2026 welded field. Tune the other thresholds
-on your robot.
+MT1 scales XY uncertainty linearly with distance and clamps it to 0.05-2.0
+meters. MT2 scales it by the square root of distance and clamps it to
+0.0001-2.0 meters. Both divide by the square root of the fielded tag count.
+Vision heading is not fused. The field bounds are for the 2026 welded field.
+Tune the other thresholds on your robot.
 
 ```java
 double untrusted = Limelight.PoseEstimateConfig.UNTRUSTED;
@@ -87,8 +137,7 @@ Limelight.PoseEstimateConfig mt1Config = Limelight.PoseEstimateConfig.defaultMT1
         .withStdDevXY(0.5, 0.05, 2.0) // .5 base, absolute min .05, absolute max 2.0. With scaling enabled, .5 at 1m distance
         .withStdDevTheta(untrusted, untrusted, untrusted) // never incorporate pose estimate rotation. You may want to incorporate rotation by setting these to other values
         .withStdDevDistanceScaling(1.0, 0.0, 6.0) // linear scaling, only scale between 0 and 6m.
-        .withStdDevTagCountDivision(0.5) // Enhance trust by square root of number of contributing tags
-        .withTelemetry(true); // Keep automatic telemetry enabled. All accepted and rejected poses will remain easy to visualize in popular dashboards
+        .withStdDevTagCountDivision(0.5); // Enhance trust by square root of number of contributing tags
 
 Limelight.PoseEstimateConfig mt2Config = Limelight.PoseEstimateConfig.defaultMT2()
         .withMinTagCount(1)
@@ -101,13 +150,13 @@ Limelight.PoseEstimateConfig mt2Config = Limelight.PoseEstimateConfig.defaultMT2
         .withStdDevXY(0.3, 0.0001, 2.0)
         .withStdDevTheta(untrusted, untrusted, untrusted)
         .withStdDevDistanceScaling(0.5, 0.0, 8.0) // Less aggressive STDDev scaling for MT2. Scale by sqrt(distance) rather than distance^1.
-        .withStdDevTagCountDivision(0.5) // Enhance trust by a factor equal to the square root of number of contributing tags
-        .withTelemetry(true);
+        .withStdDevTagCountDivision(0.5); // Enhance trust by a factor equal to the square root of number of contributing tags
 
 Pose3d cameraPoseRobotSpace = new Pose3d(0.30, 0.0, 0.20, new Rotation3d());
 Limelight camera = new Limelight("limelight", cameraPoseRobotSpace)
         .withPoseEstimateConfig_MT1(mt1Config)
-        .withPoseEstimateConfig_MT2(mt2Config);
+        .withPoseEstimateConfig_MT2(mt2Config)
+        .withTelemetry(true); // Keep automatic telemetry enabled. All accepted and rejected poses will remain easy to visualize in popular dashboards
 boolean useMegaTag2 = true;
 
 // Each robot loop
@@ -120,31 +169,157 @@ for (var estimate : camera.readAcceptedPoseEstimates(type)) {
 }
 ```
 
-4. 2027.0 unifies every 3D coordinate system into the **NWU, right-handed** (X forward, Y left, Z up) standard.
+**Telemetry.** On by default and found at `limelight_telemetry/<camera>/<type>/` with pose estimate rejection reasons and counters. Every camera also contributes to the shared `limelight_telemetry/Field` Field2d. `withTelemetry(false)` turns it off.
+
+```java
+// Nothing to write. Watch limelight_telemetry/Field in AdvantageScope, Elastic, or Glass.
+Limelight camera = new Limelight("limelight", cameraPoseRobotSpace).withTelemetry(false); // turn it off
+```
+
+**Pipeline configuration overrides.** Download a pipeline as a `.vpr` file, drop it in the deploy folder, and load it with `Limelight.PipelineConfiguration.fromDeployFolder("aiming")`. `setPipelineConfigurationOverride(config)` sends it to the camera, `setUsePipelineConfigurationOverride(true)` runs it instead of the selected on-camera pipeline. The ten pipelines are untouched, so you can switch freely. The UI shows a banner while the override runs. In the UI, you can make edits but these edits will not be saved. You will need to download the pipelien and overwrite the file in the deploy folder for any changes to persist.
+
+Use this if you have multiple cameras. A good example of this is the 2026 world championship in which robots have four cameras, and need to work on three different fields (wooden practice field, real practice field, real field).
+
+Before, teams had to manage several pipelines per camera. Now, you can configure a single pipeline per environemnt and make one code change to configure all cameras on your robot. The new Limelight camera constructors handle robot-space positioning, so you can easily share pipelines across cameras.
+
+```java
+// All file IO happens once.
+Limelight.PipelineConfiguration practiceFieldDim = Limelight.PipelineConfiguration.fromDeployFolder("practice"); // src/main/deploy/practice.vpr
+Limelight.PipelineConfiguration realFieldBright = Limelight.PipelineConfiguration.fromDeployFolder("real"); // src/main/deploy/real.vpr
+
+
+bool onPracticeField = false;
+if(onPracticeField)
+{
+    camera.setPipelineConfigurationOverride(practiceFieldDim);
+}
+else
+{
+    camera.setPipelineConfigurationOverride(realFieldBright);
+}
+
+camera.setUsePipelineConfigurationOverride(true);
+
+```
+
+**Field map overrides** Put the `.fmap` in the deploy folder and publish it once for every camera: `Limelight.setSharedMap(Limelight.FieldMap.fromDeployFolder("field"))`. All cameras localize against it instead of their own uploaded map. `Limelight.clearSharedMap()` returns them to their own maps. `isSharedMapActive()` reports per camera. Cap 256 KB.
+
+```java
+// Robot constructor, once for every camera
+Limelight.setSharedMap(Limelight.FieldMap.fromDeployFolder("field")); // src/main/deploy/field.fmap
+
+// Back to each camera's own uploaded map
+Limelight.clearSharedMap();
+```
+
+**Overrides.** Every override has a matching clear that hands control back to the pipeline or web UI.
+
+| Name | Override | Clear |
+|---|---|---|
+| Priority tag ID | `setPriorityTagIDOverride(id)` | `clearPriorityTagIDOverride()` |
+| Camera pose in robot space | `setCameraPose_RobotSpaceOverride(pose, flush)` | `clearCameraPose_RobotSpaceOverride()` |
+| Pipeline configuration (`.vpr`) | `setPipelineConfigurationOverride(config)` then `setUsePipelineConfigurationOverride(true)` | `setUsePipelineConfigurationOverride(false)` |
+| Shared field map (`.fmap`, all cameras) | `Limelight.setSharedMap(map)` | `Limelight.clearSharedMap()` |
+| Fiducial ID filter | `setFiducialIDFiltersOverride(int[])` | `clearFiducialIDFiltersOverride()` |
+| Fiducial 3D offset (target space) | `setFiducial3DOffsetOverride(Translation3d)` | `clearFiducial3DOffsetOverride()` |
+| Crop window | `setCropWindowOverride(...)` | `clearCropWindowOverride()` |
+| Keystone | `setKeystoneOverride(...)` | `clearKeystoneOverride()` |
+| Fiducial downscaling | `setFiducialDownscalingOverride(DownscaleOverride.X2)` | `clearFiducialDownscalingOverride()` |
+
+**Throttle.** `setThrottle(n)` skips frames to cut heat while disabled; pair it with `withStaleFrameThreshold`.
+
+```java
+camera.setThrottle(100); // disabledInit: skip frames to cut heat
+camera.setThrottle(0);   // enabledInit: full rate
+```
+
+**Pipeline index.** `setPipelineIndex(n)` selects one of the ten pipelines.
+
+```java
+camera.setPipelineIndex(2); // 0 through 9
+```
+
+**IMU modes.** Limelight 4 and 3G have an IMU that can supply the MT2 heading. `setIMUMode`: `EXTERNAL`, `EXTERNAL_SEED_INTERNAL`, `INTERNAL`, `INTERNAL_MT1_ASSIST`, `INTERNAL_EXTERNAL_ASSIST`. `setIMUAssistAlpha` sets convergence speed. Systemcore USB instances always use an "external" heading, even if using the Systemcore IMU.
+
+```java
+camera.setIMUMode(Limelight.IMUMode.INTERNAL_MT1_ASSIST);
+camera.setIMUAssistAlpha(0.001);
+```
+
+# Limelight 2027.0 Beta Migration Guide
+
+Breaking changes TLDR:
+
+1. All results are sent via a single MessagePack topic in NetworkTables. The original NT API can be enabled per-pipeline in the pipeline output tab.
+
+2. A single robot-orientation update (posted to a new `limelightshared` NT table) can feed every camera using MegaTag2.
+
+3. LimelightLib 2 introduces an object-oriented API with built-in pose filtering and trust scaling. Telemetry for accepted and rejected pose estimates is enabled by default, allowing those estimates and related statistics to be visualized in AdvantageScope, Elastic, and Glass. LimelightHelpers is replaced by the LimelightLib 2 vendordep.
+
+4. Maps (`.fmap`) and pipeline configurations (`.vpr`) can be placed in the deploy folder of your robot project and used as overrides. This is the recommended way to run several cameras on one robot with configurations in source control.
+
+5. 2027.0 unifies every 3D coordinate system into the **NWU, right-handed** (X forward, Y left, Z up) standard.
 
 **3D Robot Space**: X forward, Y left, Z up.
-**3D Camera* Space**: X forward (boresight), Y left, Z up.
+**3D Camera Space**: X forward (boresight), Y left, Z up.
 **3D Tag / target**: X out of the tag face, Y tag-left, Z up.
 
+2D targeting features still use the Limelight optical space, in which the camera looks down -Z. This matches other 3D graphics conventions and the standard 2D Cartesian coordinate system (center image pixel is (0,0), +Y up, +X right).
 
-2D targeting features still use the Limelight Optical space, in which the camera looks down -Z. This matches other 3D graphics convetions and the standard 2D Cartesian coordinate system (Center Image Pixel is (0,0), +Y Up, +X Right).
+This release still has the same three field localization systems: native centered, wpiblue, and wpired. Future releases will adapt to a new unified centered coordinate system. botpose, botpose_wpiblue, and botpose_wpired work as they did in 2026 releases.
 
-This release still has the same three field localization systems: native centered, wpiblue, and wpired. Future releases will adapt to a new unified centered coordinate system. botpose, botpose_wpiblue, and botpose_wpired will work as they did in 2026 releases.
-
-5. Limelight 3G, 3A, and 4 now have OTA update capabilities. You can test OTA by first using the newest hardware manager to update to 2027.0. You can then OTA update (still to 2027.0) using the .llupdate files in the folder.
-
+6. Limelight 3G, 3A, and 4 now have OTA update capabilities. You can test OTA by first using the newest hardware manager to update to 2027.0. You can then OTA update (still to 2027.0) using the `.llupdate` files in the folder.
 
 ## Checklist
 
-1. Update firmware to 2027.0 and LimelightHelpers to the 2027 release.
-2. Re-enter camera mount side and pitch on every pipeline (flip both signs).
+1. Update camera firmware to 2027.0 (Limelight hardware) or Systemcore OS (USB cameras), and replace LimelightHelpers with LimelightLib2
+2. Re-enter camera mount side and pitch on every pipeline (flip both signs), or publish the camera pose from code with the `Pose3d` constructor.
 3. Flip the third component of every POI (pipelines and old `.fmap` files).
-4. Update any code using targetspace, cameraspace transforms to work with the new coordinate system,
-5. If you want to use the classic NetworkTables keys, re-enable them in the
-   Output tab (per pipeline).
-6. Verify visually: the web UI's 3D views render exactly what NetworkTables
-   publishes, so if the robot, camera, and tags look right in the visualizers, you're good to go.
+4. Update any code using targetspace or cameraspace transforms to work with the new coordinate system.
+5. If you want to use the classic NetworkTables keys, re-enable them in the Output tab (per pipeline).
+6. Verify visually: the web UI's 3D views render exactly what NetworkTables publishes, so if the robot, camera, and tags look right in the visualizers, you're good to go.
+7. Open AdvantageScope or Elastic and watch `limelight_telemetry/Field`. Accepted and rejected estimates from every camera appear there with no extra code.
 
+# Systemcore USB Cameras
+
+Systemcore supports up to four USB vision instances. Curated cameras get hardcoded workarounds for USB firmware issues, one or two video modes selected for FIRST robots, and a built-in default calibration. Non-curated cameras still work, auto-populate their controls, expose one automatically selected video mode, and show a red calibration banner until you upload a calibration. USB cameras default to auto exposure and auto white balance.
+
+Cameras with default calibrations as of Systemcore OS Alpha 14 / Beta 14:
+
+Global-shutter vision cameras
+* Arducam OV9281 USB
+* Arducam OV9782 / goBILDA Global Shutter
+* Arducam OV2311 USB
+* Innomaker OV9281 USB
+* Waveshare OV9281 USB (not recommended due to poor optics, warning displayed in UI)
+* ThriftyBot ThriftiestCam (no auto exposure for now)
+
+Rolling-shutter vision cameras
+* UC60 / goBILDA Rolling Shutter
+
+Logitech webcams
+* Logitech C270 (960p, Model A)
+* Logitech C270 (720p, Model B) (no manual exposure, not recommended, warning displayed in UI)
+* Logi C270 HD (720p, Model C)
+* Logitech C310
+* Logitech Brio 101
+* Logitech Brio 100
+* Logitech C930
+* Logitech C920 Family
+* Logitech C922 Pro Stream
+* Logitech 1080P Pro Stream
+
+Other
+* NexiGo N60 FHD
+* Microsoft LifeCam HD-3000
+* Sony PS3 Eye (blue-dot lens)
+
+
+Calibration notes
+* "Default Calibration" means the built-in calibration for a curated camera is in use. Good to start with. Calibrate your own unit for the best 3D accuracy.
+* A red banner means a generic calibration is in use, for example an unsupported USB camera. Calibrate before trusting any 3D result.
+* Your uploaded calibration always wins over the default, and `isUsingCustomCalibration()` reports it in robot code.
+* Calibration stays on the camera. It is not part of the code-driven overrides.
 
 # 2027.0 Changelog
 
@@ -152,17 +327,17 @@ This release still has the same three field localization systems: native centere
 
 ### Significantly Improved Update UX
 
-1. Limelight OS can now be updated over the air (OTA) through the web UI with .llupdate files (LL3A, LL3G, LL4 only). No hardware manager, no USB, no flash mode. Power on, drop the update into the web UI, and you're done. You will need to use the very latest version of the hardware manager one time to get your camera on 2027.0 or later.
+1. Limelight OS can now be updated over the air (OTA) through the web UI with `.llupdate` files (LL3A, LL3G, LL4 only). No hardware manager, no USB, no flash mode. Power on, drop the update into the web UI, and you're done. You will need to use the very latest version of the hardware manager one time to get your camera on 2027.0 or later.
 Complete pipelines, including python scripts, neural networks, and
 apriltag maps, can now be downloaded/uploaded as `.llpipeline` files. All 10 pipelines can be downloaded/uploaded as a single `.llpipelinepack` file.
-2. Recovery image files and the new .llupdate OTA update packages have been optimized for fast downloads and minimal disk utilization.
+2. Recovery image files and the new `.llupdate` OTA update packages have been optimized for fast downloads and minimal disk utilization.
 3. The filesystem now expands on first boot to provide around 4 additional gigabytes of storage for rewind recordings.
 4. Every downloaded file now includes the camera name and hardware type name. This makes rewind and pipeline organization easier than before.
 5. The hardware manager, while no longer necessary for most teams after 2027.0, is now cross-platform.
 
 ### LimelightLib 2
 
-LimelightLib 2 introduces an object-oriented API with built-in pose filtering and trust scaling. Telemetry for accepted and rejected pose estimates is enabled by default, allowing those estimates and related statistics to be visualized in AdvantageScope, Elastic, and Glass.
+LimelightLib 2 introduces an object-oriented API with built-in pose filtering and trust scaling. Telemetry for accepted and rejected pose estimates is enabled by default, allowing those estimates and related statistics to be visualized in AdvantageScope, Elastic, and Glass. One library is published for two WPILib trains (alpha 5/6 and alpha 7). Pipeline configurations and field maps can be published from the robot project's deploy folder.
 
 ### IMU Reliability
 
@@ -170,27 +345,32 @@ Known IMU fault conditions have been eliminated.
 
 ### Unified 3D Coordinate Systems (BREAKING)
 
-* Limelight now uses the NWU right-hand convention everywhere. It follows the right-hand 
+* Limelight now uses the NWU right-hand convention everywhere. It follows the right-hand
 rule, with X forward, Y left, and Z up.
 * Robotspace and Points of Interest now follow NWU as well, so pipelines and code
  need updated cameraPoseInRobotSpace side, pitch, and Point of Interest values.
-* See the 2027.0 Migration Guide below
+* See the 2027.0 Migration Guide above.
 
 ### Atomic MessagePack Results (BREAKING)
 
-* All results are published to NT as a single messagepack topic. This guarantees atomicity for all results data from a camera.
+* All results are published to NT as a single MessagePack topic. This guarantees atomicity for all results data from a camera.
 * Results now include camera intrinsics and a `customcal` flag indicating whether
-the camera is using a user calibration.
+the camera is using a user calibration, and report whether a code-driven pipeline override or shared field map is active.
 * The classic NetworkTables results API is disabled by default. It can be
 enabled again per pipeline in the Output tab.
 
 ### Shared Robot Orientation
 
-* All Limelights now read `robotOrientation_set` from the new
+* All Limelights now read `robot_orientation_set` from the new
 `limelightshared` table by default. A single robot orientation update can feed
 every MegaTag2 camera.
 * Robot code can opt individual Limelights out of the shared orientation and
 publish directly to those cameras instead.
+
+### Pipelien Configuration and Field Map Overrides
+
+* Robot code can publish a pipeline configuration (`.vpr`) that overrides the selected pipeline, and a shared field map (`.fmap`) that every camera uses.
+* The web UI shows a banner while an override is active. Edits stay live for tuning but are not saved. Download the configuration to keep them.
 
 ### Full Resolution Capture Endpoint
 
@@ -218,7 +398,7 @@ with a 2.5 Mbps cap.
 
 ### Calibration and Distortion Diagnostics
 
-Improve distortion visual in web UI
+Improved distortion visual in the web UI. Default calibrations for curated USB cameras, with a clear indication of whether a default, custom, or generic calibration is in use.
 
 ### Live Diagnostics Search
 
@@ -226,30 +406,4 @@ The web UI now includes a search bar within the live JSON results view.
 
 ### Systemcore Support
 
-2027.0 runs on Systemcore image 12 and supports USB cameras. 18 cameras have been manually curated and benefit from hardcoded workarounds for various USB firmware issues. Non-curated cameras will still function and auto-populate controls. All curated cameras expose one or two video modes selected for utility on FIRST robots. Non-curated cameras will expose exactly one video mode that is automatically selected. By default, USB cameras are configured for auto exposure and auto white balance.
-
-Global-shutter Vision Cameras
-* Arducam OV9281 USB
-* Arducam OV9782 / goBILDA Global Shutter
-* Arducam OV2311 USB
-* Innomaker OV9281 USB
-* Waveshare OV9281 USB - not recommended due to poor optics, warning displayed in UI
-* Thrifty Cam and ThrifitestCam support coming soon
-
-Rolling Shutter Vision Cameras
-* UC60 / goBILDA Rolling Shutter
-
-Logitech webcams
-* Logitech C270 (960p variant)
-* Logi C270 (720p variant) — no manual exposure, not recommended, warning displayed in UI.
-* Logitech C310
-* Logitech C920 Family
-* Logitech Brio 101
-* Logitech Brio 100
-* Logitech C922 Pro Stream
-* Logitech 1080P Pro Stream
-* Logitech C930
-
-Other
-* Microsoft LifeCam HD-3000
-* Sony PS3 Eyecam
+2027.0 runs on Systemcore and supports up to four USB vision instances. Twenty cameras are curated with default calibrations and hardcoded workarounds for USB firmware issues. See the Systemcore USB Cameras section above for the list and calibration notes.

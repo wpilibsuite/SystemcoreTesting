@@ -45,6 +45,7 @@ Systemcore units originally shipped to teams during the initial FRC Alpha test a
 * [ChoreoLib](ChoreoLib.md)
 * [PathPlannerLib](PathPlannerLib.md)
 * [ThriftyLib](ThriftyLib.md)
+* [LimelightLib2](LimelightVision.md)
 
 ### Other
 
@@ -75,6 +76,7 @@ Systemcore units originally shipped to teams during the initial FRC Alpha test a
 | ChoreoLib | 2027.0.0-alpha-1 | :x: | :x: |
 | AdvantageKit | v27.0.0-alpha-3 | v27.0.0-alpha-4 | v27.0.0-alpha-5 |
 | ThriftyLib | :x: | v2027.0.0-alpha-1 | :x: |
+| LimelightLib2 | LimelightHelpers | [LimelightLib-alpha-5-6](https://limelightvision.github.io/limelightlib-public/LimelightLib-alpha5-6.json) | [LimelightLib-alpha7](https://limelightvision.github.io/limelightlib-public/LimelightLib-alpha7.json) |
 
 - :x: — No compatible release currently available for this WPILib version.
 
@@ -182,7 +184,7 @@ See [RobotPy specific notes](robotpy.md)
 
 ### Making Cables
 
-Check the "Mating Connector" Section of the [Systemcore Specification PDF](https://downloads.limelightvision.io/documents/systemcore_specifications_june15_2025_alpha.pdf), and [this GitHub discussion](https://github.com/wpilibsuite/SystemCoreTesting/discussions/11).
+[Systemcore Cables PDF](https://downloads.limelightvision.io/documents/systemcore_motioncore_cable_specifications.pdf)
 
 ### Transitioning from roboRIO
 #### I2C
