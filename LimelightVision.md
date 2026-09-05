@@ -19,7 +19,8 @@ On Systemcore, vision is built-in. Plug in a USB camera, navigate to the cameras
 
 # LimelightLib 2 Concepts
 
-**Cameras and vision instances.** A `Limelight` object talks to one camera by its NetworkTables name. Limelight hardware defaults to `limelight`. Systemcore runs up to four USB vision instances, `limelightsc0` through `limelightsc3`, one per USB port, exposed as `Limelight.SYSTEMCORE_USB0` through `SYSTEMCORE_USB3`. Set the camera's position in robot space in the constructor.
+### Cameras and vision instances.
+A `Limelight` object talks to one camera / vision instance by its NetworkTables name. Limelight Smart Cameras default to `limelight`. Systemcore runs up to four USB vision instances, `limelightsc0` through `limelightsc3`, one per USB port, exposed as `Limelight.SYSTEMCORE_USB0` through `SYSTEMCORE_USB3`. Set the camera's position in robot space in the constructor.
 
 ```java
 Limelight camera = new Limelight();                                // Limelight hardware, "limelight"
@@ -29,7 +30,8 @@ Limelight camera = new Limelight();                                // Limelight 
 //Limelight camera = new Limelight("limelight", new Pose3d(0.30, 0.0, 0.20, new Rotation3d())); // with camera pose in robot space
 ```
 
-**Results envelope and camera health.** Every frame arrives as one MessagePack envelope, so every value from `getLatestResults()` comes from the same frame. `getStatus()` reports `OK`, `NO_DATA`, `STALE` (no frame within 0.25 s, adjustable with `withStaleFrameThreshold`), or `DECODE_ERROR`. `hasTarget()` is false when the camera is stale, so a disconnected camera never drives the robot with old data.
+### Results envelope and camera health.
+Every frame arrives as one MessagePack envelope, so every value from `getLatestResults()` comes from the same frame. `getStatus()` reports `OK`, `NO_DATA`, `STALE` (no frame within 0.25 s, adjustable with `withStaleFrameThreshold`), or `DECODE_ERROR`. `hasTarget()` is false when the camera is stale, so a disconnected camera never drives the robot with old data.
 
 ```java
 Limelight camera = new Limelight()
@@ -40,7 +42,8 @@ if (camera.hasTarget()) {
 }
 ```
 
-**Visual servoing.** Aim with `getTXDegrees()`, `getTYDegrees()`, and `getTargetAreaPercent()` (0 to 100). The pipeline picks the primary target. `setPriorityTagIDOverride(id)` makes one AprilTag primary regardless of size or position, and `clearPriorityTagIDOverride()` hands selection back to the pipeline. Using getters like getTXDegrees() will internally call getLatestResults() and parse new msgpack envelopes only when there is new data.
+### Visual servoing.
+Aim with `getTXDegrees()`, `getTYDegrees()`, and `getTargetAreaPercent()` (area metrics are now always 0-100 (percentage of image area) and never 0-1). The pipeline picks the primary target based on sorting parameters configured in the UI. `setPriorityTagIDOverride(id)` makes one AprilTag primary regardless of size or position, and `clearPriorityTagIDOverride()` hands selection back to the pipeline. Using getters like getTXDegrees() will internally call getLatestResults() and parse new msgpack envelopes only when there is new data.
 
 ```java
 double turnKp = -0.02;
@@ -56,7 +59,8 @@ if(aimingEnabled && camera.hasTarget()){
 arcadeDrive(forward, turn);
 ```
 
-**Coordinate systems.** All 3D data is right-handed NWU: X forward, Y left, Z up, in field, robot, camera, and target space (the target's own frame, X out of the tag face). Pose arrays are `[x, y, z, roll, pitch, yaw]` in meters and degrees. Accessors like `getCameraPose_TargetSpace()` return `Pose3d`. 2D targeting keeps the classic Limelight optical convention (cam looks down -Z).
+### Coordinate systems.
+All 3D data is right-handed NWU: X forward, Y left, Z up, in field, robot, camera, and target space (the target's own frame, X out of the tag face). Pose arrays are `[x, y, z, roll, pitch, yaw]` in meters and degrees. Accessors like `getCameraPose_TargetSpace()` return `Pose3d`. 2D targeting (tx, ty, txnc, tync) use the classic Limelight optical convention (cam looks down -Z, +x to the right of the image, +y to the top of the image).
 
 ```java
 // NWU, right-handed: X forward, Y left, Z up. Meters and degrees.
@@ -64,7 +68,8 @@ Pose3d cameraPoseTargetSpace = camera.getCameraPose_TargetSpace(); // X out of t
 double distanceToTagMeters = cameraPoseTargetSpace.getTranslation().getNorm();
 ```
 
-**Localization: MegaTag1 and MegaTag2.** Both produce a robot pose in field space from visible AprilTags. MT1 solves position and heading from tag geometry alone, so it needs no robot input but is sensitive to single-tag ambiguity and distance. MT2 takes your robot heading and solves only for position, which is far more stable, especially with one tag, and requires you to publish robot yaw every loop. Estimate types name the algorithm and origin: `MT1_WPIBLUE`, `MT1_WPIRED`, `MT2_WPIBLUE`, `MT2_WPIRED`.
+### Localization with MegaTag1 and MegaTag2.
+MT1 and MT2 produce a robot pose in field space from visible AprilTags. MT1 solves position and heading from tag geometry alone, so it needs no robot input but is sensitive to single-tag ambiguity and distance. MT2 takes your robot heading and solves only for position, to produce ambiguity-free estimates even with one tag, but it requires you to publish robot yaw (in field space) every loop. Estimate types name the algorithm and origin: `MT1_WPIBLUE`, `MT1_WPIRED`, `MT2_WPIBLUE`, `MT2_WPIRED`.
 
 ```java
 Pose3d cameraPoseRobotSpace = new Pose3d(0.30, 0.0, 0.20, new Rotation3d());
@@ -77,7 +82,8 @@ for (var estimate : camera.readAcceptedPoseEstimates(Limelight.PoseEstimateType.
 }
 ```
 
-**Robot orientation.** `Limelight.setSharedRobotOrientation(yawDegrees)` publishes your pose estimator's heading (not the raw gyro) to the `limelightshared` table, and every camera reads it. A turret camera can use its own value: `setRobotOrientation(yaw, flush)` opts it out of the shared orientation, `setUseSharedOrientation(true)` opts it back in.
+### Robot orientation.
+`Limelight.setSharedRobotOrientation(yawDegrees)` publishes your pose estimator's heading (not the raw gyro) to the `limelightshared` table, and every camera reads it for MT2 estimates. A turret camera can use its own value: `setRobotOrientation(yaw, flush)` opts it out of the shared orientation, `setUseSharedOrientation(true)` opts it back in.
 
 Publish robot yaw before reading the queue each robot loop.
 
@@ -92,7 +98,8 @@ for (var estimate : camera.readAcceptedPoseEstimates(Limelight.PoseEstimateType.
 }
 ```
 
-**Camera pose in robot space.** Comes from the web UI or from code. The `Pose3d` constructor or `setCameraPose_RobotSpaceOverride(pose, flush)` overrides the UI and can update every loop for a camera on an elevator or turret. `clearCameraPose_RobotSpaceOverride()` returns to the UI value. An all-zero pose is the clear value. The UI shows when code controls the pose.
+### Camera pose in robot space
+Comes from the web UI or from code. The `Pose3d` constructor or `setCameraPose_RobotSpaceOverride(pose, flush)` overrides the UI and can update every loop for a camera on an elevator or turret. `clearCameraPose_RobotSpaceOverride()` returns to the UI value. An all-zero pose is the clear value. The UI shows when code controls the pose.
 
 ```java
 Pose3d cameraPoseRobotSpace = new Pose3d(0.30, 0.0, 0.20, new Rotation3d()); // 0.30 m forward, 0.20 m up, level
@@ -105,7 +112,9 @@ camera.setCameraPose_RobotSpaceOverride(new Pose3d(0.30, 0.0, 0.20 + elevatorHei
 camera.clearCameraPose_RobotSpaceOverride();
 ```
 
-**Reading pose estimates.** The camera queues up to 20 frames between loops. Drain the queue every loop. `readAcceptedPoseEstimates(type)` returns only estimates that passed every check. `readPoseEstimateQueue(type)` returns everything with rejection reasons. `readResultsQueue()` returns raw envelopes. Use one queue method per camera per frame. Each latency-compensated `PoseEstimate` carries `pose`, a `timestampSeconds`, fusion-ready `stdDevs` (see `PoseEstimateConfig`), tag count, distance, area, and `rejectionFlags`. `PoseEstimateConfig.describeRejection(flags)` prints reasons like `TAG_COUNT|AMBIGUITY`.
+### Reading pose estimates.
+
+The camera queues up to 20 frames between loops. Drain the queue every loop. `readAcceptedPoseEstimates(type)` returns only estimates that passed every check. `readPoseEstimateQueue(type)` returns everything with rejection reasons. `readResultsQueue()` returns raw envelopes. Use one queue method per camera per frame. Each latency-compensated `PoseEstimate` carries `pose`, a `timestampSeconds`, fusion-ready `stdDevs` (see `PoseEstimateConfig`), tag count, distance, area, and `rejectionFlags`. `PoseEstimateConfig.describeRejection(flags)` prints reasons like `TAG_COUNT|AMBIGUITY`.
 
 ```java
 // Each robot loop. Use one queue method per camera per frame.
@@ -115,7 +124,8 @@ for (var estimate : camera.readPoseEstimateQueue(Limelight.PoseEstimateType.MT2_
 }
 ```
 
-**Filtering and trust scaling.** A `PoseEstimateConfig` decides what is accepted and how much it is trusted. One per algorithm (MegaTag1 vs MegaTag2), via `withPoseEstimateConfig_MT1` and `_MT2`. Every camera starts with `defaultMT1()` and `defaultMT2()`, reasonable starting points rather than tuned values. Gates: min tag count, max single-tag ambiguity, max single-tag distance, max average distance, min average area, field bounds with margin (0 disables a gate). Trust: XY standard deviation starts at a base, scales with distance to an exponent (1 linear, 0.5 square root, 0 off), divides by tag count to an exponent, then clamps. Heading defaults to `UNTRUSTED` so vision heading is ignored. Configs are copied on attach. The Configured example below sets every term.
+### Pose Estimate Filtering and trust scaling
+A `PoseEstimateConfig` decides what is accepted and how much it is trusted. One per algorithm (MegaTag1 vs MegaTag2), via `withPoseEstimateConfig_MT1` and `_MT2`. Every camera starts with `defaultMT1()` and `defaultMT2()`, reasonable starting points rather than tuned values. Gates: min tag count, max single-tag ambiguity, max single-tag distance, max average distance, min average area, field bounds with margin (0 disables a gate). Trust: XY standard deviation starts at a base, scales with distance to an exponent (1 linear, 0.5 square root, 0 off), divides by tag count to an exponent, then clamps. Heading defaults to `UNTRUSTED` so vision heading is ignored. Configs are copied on attach. The Configured example below sets every term.
 
 This example configures every filter and standard-deviation scaling term.
 MT1 scales XY uncertainty linearly with distance and clamps it to 0.05-2.0
@@ -169,14 +179,17 @@ for (var estimate : camera.readAcceptedPoseEstimates(type)) {
 }
 ```
 
-**Telemetry.** On by default and found at `limelight_telemetry/<camera>/<type>/` with pose estimate rejection reasons and counters. Every camera also contributes to the shared `limelight_telemetry/Field` Field2d. `withTelemetry(false)` turns it off.
+### Telemetry
+On by default and found at `limelight_telemetry/<camera>/<type>/` with pose estimate rejection reasons and counters. Every camera also contributes to the shared `limelight_telemetry/Field` Field2d. `withTelemetry(false)` turns it off.
 
 ```java
 // Nothing to write. Watch limelight_telemetry/Field in AdvantageScope, Elastic, or Glass.
 Limelight camera = new Limelight("limelight", cameraPoseRobotSpace).withTelemetry(false); // turn it off
 ```
 
-**Pipeline configuration overrides.** Download a pipeline as a `.vpr` file, drop it in the deploy folder, and load it with `Limelight.PipelineConfiguration.fromDeployFolder("aiming")`. `setPipelineConfigurationOverride(config)` sends it to the camera, `setUsePipelineConfigurationOverride(true)` runs it instead of the selected on-camera pipeline. The ten pipelines are untouched, so you can switch freely. The UI shows a banner while the override runs. In the UI, you can make edits but these edits will not be saved. You will need to download the pipelien and overwrite the file in the deploy folder for any changes to persist.
+### Pipeline configuration overrides.
+
+Download a pipeline as a `.vpr` file, drop it in the deploy folder, and load it with `Limelight.PipelineConfiguration.fromDeployFolder("aiming")`. `setPipelineConfigurationOverride(config)` sends it to the camera, `setUsePipelineConfigurationOverride(true)` runs it instead of the selected on-camera pipeline. The ten pipelines are untouched, so you can switch freely. The UI shows a banner while the override runs. In the UI, you can make edits but these edits will not be saved. You will need to download the pipelien and overwrite the file in the deploy folder for any changes to persist.
 
 Use this if you have multiple cameras. A good example of this is the 2026 world championship in which robots have four cameras, and need to work on three different fields (wooden practice field, real practice field, real field).
 
@@ -202,7 +215,9 @@ camera.setUsePipelineConfigurationOverride(true);
 
 ```
 
-**Field map overrides** Put the `.fmap` in the deploy folder and publish it once for every camera: `Limelight.setSharedMap(Limelight.FieldMap.fromDeployFolder("field"))`. All cameras localize against it instead of their own uploaded map. `Limelight.clearSharedMap()` returns them to their own maps. `isSharedMapActive()` reports per camera. Cap 256 KB.
+### Field map overrides
+
+Put the `.fmap` in the deploy folder and publish it once for every camera: `Limelight.setSharedMap(Limelight.FieldMap.fromDeployFolder("field"))`. All cameras localize against it instead of their own uploaded map. `Limelight.clearSharedMap()` returns them to their own maps. `isSharedMapActive()` reports per camera. Cap 256 KB.
 
 ```java
 // Robot constructor, once for every camera
@@ -212,7 +227,11 @@ Limelight.setSharedMap(Limelight.FieldMap.fromDeployFolder("field")); // src/mai
 Limelight.clearSharedMap();
 ```
 
-**Overrides.** Every override has a matching clear that hands control back to the pipeline or web UI.
+### All Overrides (Methods in robot code that override UI configurations)
+
+There is a single chain of authority. UI Pipeline settings are at the bottom, Pipeline Configuration Overrides (.vpr in deploy folder) override UI Pipeline Settings, and Individual Settings Overrides (EG setFiducialDownscalingOverride) override all.
+
+Every override has a matching clear that hands control back to the pipeline or web UI.
 
 | Name | Override | Clear |
 |---|---|---|
@@ -226,20 +245,22 @@ Limelight.clearSharedMap();
 | Keystone | `setKeystoneOverride(...)` | `clearKeystoneOverride()` |
 | Fiducial downscaling | `setFiducialDownscalingOverride(DownscaleOverride.X2)` | `clearFiducialDownscalingOverride()` |
 
-**Throttle.** `setThrottle(n)` skips frames to cut heat while disabled; pair it with `withStaleFrameThreshold`.
+### Throttle
+`setThrottle(n)` skips frames to cut heat while disabled.
 
 ```java
 camera.setThrottle(100); // disabledInit: skip frames to cut heat
-camera.setThrottle(0);   // enabledInit: full rate
 ```
 
-**Pipeline index.** `setPipelineIndex(n)` selects one of the ten pipelines.
+### Pipeline index
+`setPipelineIndex(n)` selects one of the ten pipelines.
 
 ```java
 camera.setPipelineIndex(2); // 0 through 9
 ```
 
-**IMU modes.** Limelight 4 and 3G have an IMU that can supply the MT2 heading. `setIMUMode`: `EXTERNAL`, `EXTERNAL_SEED_INTERNAL`, `INTERNAL`, `INTERNAL_MT1_ASSIST`, `INTERNAL_EXTERNAL_ASSIST`. `setIMUAssistAlpha` sets convergence speed. Systemcore USB instances always use an "external" heading, even if using the Systemcore IMU.
+### IMU modes
+Limelight 4 has an IMU that can be used to improve MT2. `setIMUMode`: `EXTERNAL`, `EXTERNAL_SEED_INTERNAL`, `INTERNAL`, `INTERNAL_MT1_ASSIST`, `INTERNAL_EXTERNAL_ASSIST`. `setIMUAssistAlpha` sets convergence speed. Systemcore USB instances always use an "external" heading, even if using the Systemcore IMU. For Limelight 4, the recommended approach is to use Seed_Internal continuously, followed by Internal_External_Assist while localizing or aiming. Internal_External_Assist uses the built-in IMU for the best possible response times while always converging on the external reference such as the Systemcore IMU or Pigeon2 IMU. This means you can use the built-in IMU for fast responsse, and your main robot imu for your true absolute reference.
 
 ```java
 camera.setIMUMode(Limelight.IMUMode.INTERNAL_MT1_ASSIST);
