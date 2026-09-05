@@ -29,7 +29,7 @@ Systemcore units originally shipped to teams during the initial FRC Alpha test a
 
 ### Tooling
 
-- [2027 Alpha 6 WPILib Installer](https://github.com/wpilibsuite/allwpilib/releases/tag/v2027.0.0-alpha-6)
+- [2027 Alpha 7 WPILib Installer](https://github.com/wpilibsuite/allwpilib/releases/tag/v2027.0.0-alpha-7)
 - [2027 Driver Station](https://github.com/wpilibsuite/FirstDriverStation-Public)
 - [OS Releases, Toolchain, Package Examples, Cross-Compilation Examples](https://github.com/LimelightVision/systemcore-os-public)
 - Limelight Hardware Manager 2.0.10 - [Windows](https://downloads.limelightvision.io/software/LimelightHardwareManagerSetup2_0_10.exe) | [macOS (Apple Silicon)](https://downloads.limelightvision.io/software/LimelightHardwareManager-macOS-AppleSilicon2_0_10.dmg) | [macOS (Intel)](https://downloads.limelightvision.io/software/LimelightHardwareManager-macOS-Intel2_0_10.dmg) | [Linux x86_64 AppImage](https://downloads.limelightvision.io/software/LimelightHardwareManager-x86_64_2_0_10.AppImage.zip) | [Linux ARM64 AppImage BETA](https://downloads.limelightvision.io/software/LimelightHardwareManager-aarch64_2_0_10.AppImage.zip)
