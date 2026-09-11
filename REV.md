@@ -11,7 +11,7 @@ REVLib should be available in the vendor dependencies of WPILib VS Code, but you
 https://software-metadata.revrobotics.com/REVLib-2027.json
 ```
 
-[Offline Install](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/revlib-2027.0.0-alpha-6/REVLib-offline-v2027.0.0-alpha-6.zip)
+[Offline Install](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/revlib-2027.0.0-alpha-7/REVLib-offline-v2027.0.0-alpha-7.zip)
 
 Refer to [WPILib Docs](https://docs.wpilib.org/en/stable/docs/software/vscode-overview/3rd-party-libraries.html) about installing 3rd party libraries.
 
@@ -20,6 +20,19 @@ Refer to [WPILib Docs](https://docs.wpilib.org/en/stable/docs/software/vscode-ov
 
 <details>
 <summary>Changelog</summary>
+
+### REVLib v2027.0.0-alpha-7
+
+- [REVLib] Updates to WPILib 2027 Alpha 7
+- [REVLib] Device constructors now take the WPILib CANPort enum instead of a raw int for the CAN bus ID
+- [REVLib] Renames getBusId() to getCanPort()
+- [A301] Updates CAN specs and fixes inversion. Requires latest A301 firmware.
+- [SPARK] Deprecates AbsoluteEncoderConfig.zeroCentered(). Use rangeOffset() instead.
+- [SPARK] Removes hall sensor velocity averaging configurations in favor of new firmware filtering system
+- [SPARK] Adjusts default encoder average depth to 8 and sample delta to 20
+- [REVLib] Removes Conversion Factors in SPARKs and MAXSplineEncoder
+- [SPARK] Removes ClosedLoopConfig.positionWrappingMinInput, ClosedLoopConfig.positionWrappingMaxInput, and ClosedLoopConfig.positionWrappingInputRange
+- [REVLib] C++ - Replace usage of fmt library with std
 
 ### REVLib v2027.0.0-alpha-6
 
@@ -64,12 +77,46 @@ Refer to [WPILib Docs](https://docs.wpilib.org/en/stable/docs/software/vscode-ov
 
 ## Hardware Client 2
 
-[RHC2 for Desktop](https://alpha.rhc2.revrobotics.com/download-site/download.html)
+[RHC2 for Desktop](https://rhc2.revrobotics.com/download/download.html)
 
-[RHC2 IPK for Systemcore](https://alpha.rhc2.revrobotics.com/download-site/debian/rev-robotics-rev-hardware-client-alpha_1.3.1_arm64.ipk) - Install this by clicking "Add Package" on the home screen of Systemcore and selecting this file. It will take a minute or so to start up.
+[RHC2 IPK for Systemcore](https://rhc2.revrobotics.com/download/debian/rev-robotics-rev-hardware-client_1.4.2_arm64.ipk) - Install this by clicking "Add Package" on the home screen of Systemcore and selecting this file. It will take a minute or so to start up.
 
 <details>
 <summary>Changelog</summary>
+
+## RHC2 1.4.2
+
+- Adds download location prompt for download actions from Control Hub's Robot Controller Console
+- Improves recovery of wireless Control Hub connections after a Wi-Fi drop
+
+## RHC2 1.4.1
+
+- Adds a prompt on startup when an update is available, with the option to update now, on exit, or ignore it
+- Adds a prompt on startup showing the changelog after the app has been updated
+- Adds visualizer for absolute encoder utility
+- Add inversion configuration to A301
+- Adds support for opening the update manager directly from a device's update tab to enable updating multiple devices of the same type
+- Uses Control Hub's friendly name in device list
+- Improves general experience with the FTC Log Viewer
+- Updates the supported devices list on the About page to reflect all currently supported devices
+- Fixes UI crash on Systemcore
+- Fixes Robot Controller Console not working as expected for Control Hubs connected over USB
+- Fixes Expansion Hub firmware version not showing up for Control Hub devices
+- Fixes Control Hub menu labels being illegible in light mode
+- Fixes false positive error toast when attempting to run an A301
+
+## [1.4.0]
+
+- Adds controller support for running motors
+- Adds auto-fetching latest releases on startup
+- Adds toast to show when an action failed due to being in read-only mode
+- Adds setpoint presets to A301/SPARK run pages
+- Adds FTC Log Viewer
+- Fixes crash when adding closed loop control telemetry for a SPARK
+- Fixes reset safe parameters showing the incorrect number of changes made
+- Fixes run multiple checkbox not working with A301
+- Fixes moving app to applications folder on macOS
+- Fixes selecting an A301 opening a SPARK with the same CAN ID on the same bus
 
 ## RHC2 1.3.1
 
