@@ -70,7 +70,7 @@ Systemcore units originally shipped to teams during the initial FRC Alpha test a
 | Library | WPILib v2027.0.0-alpha-2 | WPILib v2027.0.0-alpha-5/6 |  WPILib v2027.0.0-alpha-7
 |---|---|---|---|
 | CTRE Phoenix 6 | 25.90.0-alpha-1 or 25.90.0-alpha-2 | v26.50.0-alpha-1 | :x: |
-| REVLib | v2027.0.0-alpha-1 | v2027.0.0-alpha-2 | :x: |
+| REVLib | v2027.0.0-alpha-1 | v2027.0.0-alpha-2 | v2027.0.0-alpha-7 |
 | ReduxLib | v2027.0.0-alpha-2 | v2027.0.0-alpha-6 | :x: |
 | PathPlannerLib | 2027.0.0-alpha-2 | v2027.0.0-alpha-3 | :x: |
 | ChoreoLib | 2027.0.0-alpha-1 | :x: | :x: |
