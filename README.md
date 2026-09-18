@@ -69,7 +69,7 @@ Systemcore units originally shipped to teams during the initial FRC Alpha test a
 
 | Library | WPILib v2027.0.0-alpha-2 | WPILib v2027.0.0-alpha-5/6 |  WPILib v2027.0.0-alpha-7
 |---|---|---|---|
-| CTRE Phoenix 6 | 25.90.0-alpha-1 or 25.90.0-alpha-2 | v26.50.0-alpha-1 | :x: |
+| CTRE Phoenix 6 | 25.90.0-alpha-1 or 25.90.0-alpha-2 | v26.50.0-alpha-1 | v26.70.0-alpha-2 |
 | REVLib | v2027.0.0-alpha-1 | v2027.0.0-alpha-2 | v2027.0.0-alpha-7 |
 | ReduxLib | v2027.0.0-alpha-2 | v2027.0.0-alpha-6 | :x: |
 | PathPlannerLib | 2027.0.0-alpha-2 | v2027.0.0-alpha-3 | :x: |
@@ -183,11 +183,10 @@ See [RobotPy specific notes](robotpy.md)
 
 [Package Installation Tutorial Video (30s)](https://player.vimeo.com/video/1095497571)
 
-1. [Download the CANivore IPK packages](https://github.com/wpilibsuite/SystemCoreTesting/blob/main/CTR-Phoenix.md#download)
+1. [Download the CANivore IPK package](https://github.com/wpilibsuite/SystemCoreTesting/blob/main/CTR-Phoenix.md#download)
 2. Navigate to the web interface
 3. Click the "Add Package" card
-4. Install the `usb-kernel` package, and then install the `usb` package
-5. Powercycle your Systemcore.
+4. Install the package
 
 ### Making Cables
 
