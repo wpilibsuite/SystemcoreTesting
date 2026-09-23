@@ -43,7 +43,9 @@ requires = [
 * Vendordep: Select from the vendor JSON repository in VS code
 
 * canivore-usb Package:
-  * WPILib `2027_alpha7`: [canivore-usb_1.18_systemcore_wpilib_alpha_7](https://ctre.download/files/systemcore/canivore-usb_1.18_systemcore_wpilib_alpha_7.ipk)
+  * WPILib `2027_alpha7` on `beta` Systemcore: [canivore-usb_1.18_systemcoreos_beta_14](https://ctre.download/files/systemcore/canivore-usb_1.18_systemcoreos_beta_14.ipk)
+    * Starting in this release, only one IPK is necessary for the CANivore
+  * WPILib `2027_alpha7` on `alpha` Systemcore: [canivore-usb_1.18_systemcoreos_alpha_14](https://ctre.download/files/systemcore/canivore-usb_1.18_systemcoreos_alpha_14.ipk)
     * Starting in this release, only one IPK is necessary for the CANivore
   * WPILib `2027_alpha5`: [canivore-usb-kernel_1.18_aarch](https://ctre.download/files/systemcore/canivore-usb-kernel_1.18_aarch64.ipk) and [canivore-usb_1.16_aarch64](https://ctre.download/files/systemcore/canivore-usb_1.16_aarch64.ipk)
     * Install canivore-usb-kernel, then canivore-usb
