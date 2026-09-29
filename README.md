@@ -183,7 +183,7 @@ See [RobotPy specific notes](robotpy.md)
 
 [Package Installation Tutorial Video (30s)](https://player.vimeo.com/video/1095497571)
 
-1. [Download the CANivore IPK package](https://github.com/wpilibsuite/SystemCoreTesting/blob/main/CTR-Phoenix.md#download)
+1. [Download the CANivore IPK package](CTR-Phoenix.md#downloads)
 2. Navigate to the web interface
 3. Click the "Add Package" card
 4. Install the package

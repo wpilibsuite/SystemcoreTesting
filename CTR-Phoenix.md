@@ -1,13 +1,13 @@
 # CTR-Electronics Phoenix 6
 
-Please read through the requirements and basic example before utilizing the vendordep.
+Please read through the requirements, basic example, and changelog before utilizing the vendordep.
 
 ## Requirements
 
 > [!IMPORTANT]
-> During alpha, there are frequent breaking changes between releases. Please carefully review the [changelog](#download) between each release.
+> During alpha, there are frequent breaking changes between releases. Please carefully review the [changelog](#changelog) between each release.
 
-Due to the volatile nature of versions and breaking changes, the below list is provided to clarify compatible WPILib version, compatible Phoenix 6 API version and compatible firmware version.
+Due to the volatile nature of versions and breaking changes, the below list is provided to clarify the compatibility between WPILib version, Phoenix 6 API version, and firmware version.
 
 ### WPILib to Phoenix 6 API
 
@@ -38,21 +38,25 @@ requires = [
 ]
 ```
 
-## Download
+## Downloads
 
-* Vendordep: Select from the vendor JSON repository in VS code
+* Vendordep: Select from the vendor JSON repository in VS Code
 
-* canivore-usb Package:
-  * WPILib `2027_alpha7` on `beta` Systemcore: [canivore-usb_1.18_systemcoreos_beta_14](https://ctre.download/files/systemcore/canivore-usb_1.18_systemcoreos_beta_14.ipk)
-    * Starting in this release, only one IPK is necessary for the CANivore
-  * WPILib `2027_alpha7` on `alpha` Systemcore: [canivore-usb_1.18_systemcoreos_alpha_14](https://ctre.download/files/systemcore/canivore-usb_1.18_systemcoreos_alpha_14.ipk)
+* canivore-usb Package
+  * WPILib `2027_alpha7`
+    * Beta 14 / Any 15: [canivore-usb_1.18_systemcoreos_beta_14](https://ctre.download/files/systemcore/canivore-usb_1.18_systemcoreos_beta_14.ipk)
+    * Alpha 14: [canivore-usb_1.18_systemcoreos_alpha_14](https://ctre.download/files/systemcore/canivore-usb_1.18_systemcoreos_alpha_14.ipk)
     * Starting in this release, only one IPK is necessary for the CANivore
   * WPILib `2027_alpha5`: [canivore-usb-kernel_1.18_aarch](https://ctre.download/files/systemcore/canivore-usb-kernel_1.18_aarch64.ipk) and [canivore-usb_1.16_aarch64](https://ctre.download/files/systemcore/canivore-usb_1.16_aarch64.ipk)
     * Install canivore-usb-kernel, then canivore-usb
 
+* Phoenix Tuner X Preview
+  * Windows: [Microsoft Store](https://apps.microsoft.com/detail/9n17ns6nm06v) (can be installed alongside the stable Phoenix Tuner X)
+  * macOS/iOS: [TestFlight](https://testflight.apple.com/join/1kftrjGW)
+
 ## Basic Example
 
-SystemCore CAN buses can be used by using the `CANBus(CANPort port)` constructor. An example is shown below.
+Systemcore CAN buses can be used by using the `CANBus(CANPort port)` constructor. An example is shown below.
 
 ```java
 // Use the CANivore named "swag"
@@ -66,14 +70,14 @@ private final TalonFX m_motor = new TalonFX(0, new CANBus(CANPort.CAN_S2));
 
 The Phoenix6-Examples repo has branches for the following releases:
 
-* `26.70.0-alpha-2`: [2027_alpha5](https://github.com/CrossTheRoadElec/Phoenix6-Examples/tree/2027_alpha7)
+* `26.70.0-alpha-2`: [2027_alpha7](https://github.com/CrossTheRoadElec/Phoenix6-Examples/tree/2027_alpha7)
 * `26.50.0-alpha-1`: [2027_alpha5](https://github.com/CrossTheRoadElec/Phoenix6-Examples/tree/2027_alpha5)
 
 ## Changelog
 
 ### 26.70.0-alpha-2
 
-Changelog is available [here](https://api.ctr-electronics.com/changelog#20260918). Note that Tuner X has not yet been updated to support generating mechanisms with this release.
+Changelog is available [here](https://api.ctr-electronics.com/changelog#20260918). Supported by Phoenix Tuner X Preview 2026.10.X (see [downloads](#downloads)).
 
 ### 26.50.0-alpha-1
 
@@ -108,4 +112,4 @@ Please see [known issues](https://api.ctr-electronics.com/changelog#known-issues
 - An offline installer is unavailable.
 - Signal logger does not auto-start on FMS.
 - Signal logger does not rename files to include the match name when connected to FMS.
-- Tuner cannot deploy a temporary diagnostic server to the SystemCore. To use Phoenix Tuner X functionality, deploy a blank robot program with a Phoenix 6 device initialized. No other Tuner functionality is affected.
+- Tuner cannot deploy a temporary diagnostic server to the Systemcore. To use Phoenix Tuner X functionality, deploy a blank robot program with a Phoenix 6 device initialized. No other Tuner functionality is affected.
