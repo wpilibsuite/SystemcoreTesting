@@ -1,10 +1,15 @@
 # ReduxLib
 
-The current version of ReduxLib for SystemCore is **2027.0.0-alpha-7.**
+The current version of ReduxLib for SystemCore is **2027.0.0-alpha-7p1.**
 
 It supports WPILib alpha version **2027.0.0-alpha-7+**.
 
-This is _mostly_ similar to v2026.1.2, with some changes to use Alerts instead.
+## Major changes
+
+* This vendordep now uses Alerts.
+* **New in alpha-7p1:** The `.sensors` namespace has been removed; changing `com.reduxrobotics.sensors.canandmag.Canandmag` -> `com.reduxrobotics.canandmag.Canandmag` will fix your import errors.
+
+This is otherwise _mostly_ similar to v2026.1.2, with some changes to use Alerts instead.
 For more details, also see our [releases page](https://github.com/Redux-Robotics/canandrepo-public/releases)
 
 ## Install
@@ -25,14 +30,16 @@ This is typically in:
 * `~/.wpilib/2027_alpha7` on Mac
 * `C:\Users\Public\wpilib\2027_alpha7` on Windows
 
-[ReduxLib-offline-v2027.0.0-alpha-7.zip](https://frcsdk.reduxrobotics.com/offline/ReduxLib-offline-v2027.0.0-alpha-7.zip)
+[ReduxLib-offline-v2027.0.0-alpha-7p1.zip](https://frcsdk.reduxrobotics.com/offline/ReduxLib-offline-v2027.0.0-alpha-7p1.zip)
 
 ## CAN ID configuration
 
 Just like v2026, the ReduxLib configurator will be available at `http://[insert SystemCore address here]:7244/`, 
 e.g. [http://robot.local:7244](http://robot.local:7244).
 
-It should function similar to how it did in v2026.
+This requires ReduxLib installed in a running (and not continuously crashing) robot project.
+
+It should function similar to how it did in v2026. however **it currently does not automatically open existing CAN buses.**
 
 ## Usage
 
@@ -52,9 +59,46 @@ Or, you can use a bus specifier string directly:
 Canandgyro gyro = new Canandgyro(0, "socketcan:can_d2");
 ```
 
+## Known issues
+
+### Can't open Configurator
+
+Make sure your code isn't crashlooping first.
+
+We're working on an IPK standalone build.
+
+### Can't see buses in Configurator
+
+You will need to declare a Redux device in your robot code running on the desired bus(es) to configure.
+Having a valid ID doesn't matter; e.g. to configure Systemcore bus 1, one could add to their robot code:
+
+```
+// Whether or not you actually have a Canandgyro of id 42 on CAN_S1 doesn't matter. All that matters is the bus.
+Canandgyro gyro = new Canandgyro(42, CANPort.CAN_S1);
+```
+
+The ability to manually open buses to configure them will be added in later updates, as well as a standalone IPK version of the configurator.
+
+### Desktop sim crashes due to socketcan bus backends being unsupported on Windows/Mac
+
+Will be fixed in a future release.
+AdvantageKit users should probably be defining their simulation IO classes without specific hardware, however.
+
+### Some internal alerts render weirdly because of `:` in the bus name
+
+Will be fixed in a future release.
+
 ## Changelog
 
-### ReduxLib v2027.0.0-alpha-6
+### ReduxLib v2027.0.0-alpha-7p1
+
+### Fixed
+* [Java] Fixed initialization order issues causing `NullPointerException`s on startup
+
+#### Changed
+* [Java/C++] Removed the intermediate `sensors` namespace
+
+### ReduxLib v2027.0.0-alpha-7
 
 #### Added
 
