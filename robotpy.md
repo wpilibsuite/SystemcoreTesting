@@ -5,7 +5,7 @@ RobotPy 2027
 
 Install Python, and then:
 
-    python3 -m pip install robotpy~=2027.0.0a5.post1
+    python3 -m pip install robotpy~=2027.0.0a7
 
 ### Deploy
 
