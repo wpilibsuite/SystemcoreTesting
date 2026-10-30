@@ -11,7 +11,7 @@ REVLib should be available in the vendor dependencies of WPILib VS Code, but you
 https://software-metadata.revrobotics.com/REVLib-2027.json
 ```
 
-[Offline Install](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/revlib-2027.0.0-alpha-7/REVLib-offline-v2027.0.0-alpha-7.zip)
+[Offline Install](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/revlib-2027.0.0-alpha-9/REVLib-offline-v2027.0.0-alpha-9.zip)
 
 Refer to [WPILib Docs](https://docs.wpilib.org/en/latest/docs/software/vscode-overview/3rd-party-libraries.html) about installing 3rd party libraries.
 
@@ -20,6 +20,20 @@ Refer to [WPILib Docs](https://docs.wpilib.org/en/latest/docs/software/vscode-ov
 
 <details>
 <summary>Changelog</summary>
+
+### REVLib v2027.0.0-alpha-9
+
+- [REVLib] Desktop drivers for macOS are now universal binaries (x86-64 and Apple Silicon)
+- [StatusLogger] Writes REVLOG format version 2, featuring a number of fixes, changes, additions, and optimizations. Requires `@rev-robotics/revlog-converter` 2.0.0 or newer (or an AdvantageScope release that bundles it) to open
+- [SPARK] Re-adds ClosedLoopConfig.positionWrappingMinInput, ClosedLoopConfig.positionWrappingMaxInput, and ClosedLoopConfig.positionWrappingInputRange, now in rotations of the feedback sensor. Requires SPARK firmware with configurable wrap bounds.
+- [REVLib] Fixes dangling pointer/memory leak in the JNI layer
+- [REVLib] Fixes CAN receive buffer overflow on HAL errors
+
+### REVLib v2027.0.0-alpha-8
+
+- [A301] Fixes construction segfault when specifying a Motioncore port
+- [A301] Implements some simulation in the driver
+- [REVLib] Fixes alpha-7 read timeouts
 
 ### REVLib v2027.0.0-alpha-7
 
@@ -79,10 +93,24 @@ Refer to [WPILib Docs](https://docs.wpilib.org/en/latest/docs/software/vscode-ov
 
 [RHC2 for Desktop](https://rhc2.revrobotics.com/download/download.html)
 
-[RHC2 IPK for Systemcore](https://rhc2.revrobotics.com/download/debian/rev-robotics-rev-hardware-client_1.4.2_arm64.ipk) - Install this by clicking "Add Package" on the home screen of Systemcore and selecting this file. It will take a minute or so to start up.
+[RHC2 IPK for Systemcore](https://rhc2.revrobotics.com/download/debian/rev-robotics-rev-hardware-client_1.4.4_arm64.ipk) - Install this by clicking "Add Package" on the home screen of Systemcore and selecting this file. It will take a minute or so to start up.
 
 <details>
 <summary>Changelog</summary>
+
+## RHC2 1.4.4
+
+- Adds offline firmware packs (FRC/FTC, latest or all public versions) to the download page, kept up to date with each firmware release, and an Import Pack button on the Downloads page to install them without internet
+- Adds support for installing the Robot Controller app on Android phones
+- Improves MAXSpline Encoder and CAN Encoder Adapter configuration
+- Removes conversion factors to match SPARK and encoder firmware
+- Fixes Android phones always being labeled as a Driver Station
+
+## RHC2 1.4.3
+
+- Fixes app crashing on startup on Intel Macs
+- Renames Expansion Hub Firmware to Expansion/Control Hub Firmware
+- Displays Robot Controller and Driver Station app versions in major.minor format
 
 ## RHC2 1.4.2
 
@@ -191,15 +219,42 @@ Refer to [WPILib Docs](https://docs.wpilib.org/en/latest/docs/software/vscode-ov
 
 A301 firmware downloads, update instructions, and the firmware changelog can be found in [A301.md](A301.md).
 
+### SPARK MAX and SPARK Flex
+
+SPARK MAX and SPARK Flex firmware `v27.0.0` can be installed through RHC2, or downloaded directly:
+
+- [SPARK MAX v27.0.0](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/sm-27.0.0/spark_max_27_0_0.dfu)
+- [SPARK Flex v27.0.0](https://github.com/REVrobotics/REV-Software-Binaries/releases/download/sf-27.0.0/spark_flex_27_0_0.dfu)
+
+<details>
+<summary>Changelog</summary>
+
+#### SPARK MAX and SPARK Flex v27.0.0
+
+- Removes the position and velocity conversion factor parameters for all sensors. Positions are now reported in native sensor units (rotations for encoders, volts for the analog sensor) and velocities in units per minute
+- Position PID Min/Max Input (the position PID wrap range) is now in rotations of the feedback sensor instead of conversion factor units
+- Removes the duty cycle zero centered and mode parameters, and adds a duty cycle range offset parameter to shift the reported duty cycle value within [-1, 1)
+- Adds a 4-bit Config Generation counter to Status 1 (bits 49-52) that advances whenever any parameter changes, so host tools can detect and refetch changed configuration
+- (SPARK MAX only) Reworks hall sensor velocity filtering for improved responsiveness and reduced noise. Removes the hall averaging configuration parameters
+- Changes the default encoder CPR to 8192
+- Changes the default encoder average depth to 8 and sample delta to 20
+- Fixes follower mode applied output running approximately 1% slower than the leader
+- Fixes follower mode voltage compensating the applied output twice when voltage compensation is enabled on both the leader and follower
+- Fixes a case where setpoints aren't accepted through USB
+- Fixes kS causing motor output when the velocity setpoint is 0
+- (SPARK MAX only) Fixes closed loop control using the wrong sensor after a reboot when the closed loop sensor is not the main encoder and idle mode is brake, the motor is inverted, or the control type is not duty cycle
+
+</details>
+
 ### Misc
 
-Other than A301, there are currently no new device versions for 2027. Please use the latest 2026 releases of firmware for your devices.
+Other than A301, SPARK MAX, and SPARK Flex, there are currently no new device versions for 2027. Please use the latest 2026 releases of firmware for your devices.
 
 <details>
 <summary>Latest firmware versions</summary>
 
-- SPARK Flex: `v26.1.6`
-- SPARK MAX: `v26.1.5`
+- SPARK Flex: `v27.0.0`
+- SPARK MAX: `v27.0.0`
 - Power Distribution Hub: `v26.1.3`
 - Pneumatic Hub: `v26.1.3`
 - Servo Hub: `v26.1.3`
