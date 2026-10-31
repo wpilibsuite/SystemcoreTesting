@@ -18,7 +18,6 @@ Zip files for offline installation are attached to each GitHub release (linked b
 - **Compatibility: WPILib 2027.0.0-alpha-7, Systemcore alpha/beta 14+**
 - Fixed reported issues with USB logging on Systemcore
   - This release fixes all known AdvantageKit issues that can result in missing or truncated logs. Due to unrelated issues, users should also avoid using USB 3 drives on alpha/beta Systemcore units ([link](https://github.com/wpilibsuite/SystemcoreTesting#known-issues)) and always format USB drives with MBR partition maps ([link](https://github.com/wpilibsuite/SystemcoreTesting/issues/424)).
-- Improved reliability of log renaming based on match number
 - Added LoggedOpModeRobot robot base class (optional, see Javadocs for details)
 - Improved loop overrun warnings on robot base classes
 - Added built-in alerts from Logger, WPILOGWriter, and console capture
@@ -92,6 +91,10 @@ Zip files for offline installation are attached to each GitHub release (linked b
   - Note that this data is not used during replay, so the onboard IMU must be isolated to an IO implementation with standard input logging when accessed in robot code.
 
 ## Known Issues
+
+### Logs do not include the event name or match number
+
+Logs saved during matches typically include the event name and/or match number, but this is not functional with AdvantageKit `v27.0.0-alpha-7`. This will be fixed in the next AdvantageKit release.
 
 ### Console logging may be delayed by ~250ms
 
