@@ -5,7 +5,7 @@ RobotPy 2027
 
 Install Python, and then:
 
-    python3 -m pip install robotpy~=2027.0.0a7
+    python3 -m pip install robotpy~=2027.0.0a8
 
 ### Deploy
 
@@ -19,4 +19,8 @@ deploy to a Systemcore system. See WPILib documentation for more details.
 Vendors have been removed from `robotpy_extras` in `pyproject.toml`. You must add
 their pypi package names to the `requires` list instead. The following vendor
 packages are known to be available for 2027:
+
+* phoenix6
+* robotpy-navx
+* robotpy-rev
 
