@@ -191,7 +191,7 @@ These always point at the latest release. The latest release for WPILib v2027.0.
 
 Each YAGSL vendordep only requires the matching YAMS vendordep (`yams_commands2.json` or `yams_commands3.json`). Every other vendor library is optional: install REVLib, Phoenix6, ReduxLib or ThriftyLib only if your configuration uses that vendor's devices. YAGSL loads a vendor's devices only when your JSON configuration asks for them. YAGSL v2026.11.06 uses YAMS v2026.11.06.
 
-StudicaLib and AmLib devices are not supported yet in the 2027 alpha, since those vendors have not published 2027_alpha7 vendordeps. Example robot projects for both frameworks are in [examples/commands2](https://github.com/Yet-Another-Software-Suite/YAGSL/tree/main/examples/commands2) and [examples/commands3](https://github.com/Yet-Another-Software-Suite/YAGSL/tree/main/examples/commands3).
+AmLib devices are not supported yet in the 2027 alpha, since AndyMark has not published a 2027_alpha7 vendordep. Example robot projects for both frameworks are in [examples/commands2](https://github.com/Yet-Another-Software-Suite/YAGSL/tree/main/examples/commands2) and [examples/commands3](https://github.com/Yet-Another-Software-Suite/YAGSL/tree/main/examples/commands3).
 
 ### Devices in the JSON configuration
 
@@ -216,6 +216,8 @@ CTRE devices (`talonfx`, `talonfxs`, `cancoder`, `pigeon2`) can also be on a CAN
 CTRE devices with an empty `canbus` are on `can_s0` like every other vendor, even though Phoenix 6 on its own defaults to `can_s2`. If a configuration names a Systemcore CAN bus, such as `"can_s1"` or `"socketcan:can_s1"`, change it to the bus number, `"1"`.
 
 **Thrifty Nova:** supported again through the YAMS `NovaWrapper`; install the [ThriftyLib vendordep](https://software.thethriftybot.com/frcvendor/ThriftyLib-2027.json) to use it. A Nova is `nova_` followed by its motor: `nova_neo`, `nova_neo2`, `nova_neo550`, `nova_vortex`, `nova_minion` or `nova_pulsar`. An absolute encoder attached to the Nova's data port (for example `revthroughbore_attached`) is used as the module's external feedback encoder, and attached analog encoders work too. A Nova angle motor with a CAN absolute encoder, such as `cancoder_can`, works like a SPARK MAX with one. The Nova runs the module's closed loop, wrapping and feedforward itself.
+
+**Studica NavX3:** `navx3_can` works with StudicaLib 2027.0.0-alpha-1; install the [StudicaLib vendordep](https://dev.studica.com/maven/release/2027/json/StudicaLib.json) to use it. Its `canbus` is a Systemcore CAN bus number, like every other vendor's.
 
 **Systemcore IMU:** the Systemcore's built in IMU can be the gyro, with the type `systemcore_internal`. It is part of WPILib, so it needs no vendordep and no `id` or `canbus`.
 
