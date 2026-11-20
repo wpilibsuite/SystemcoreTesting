@@ -11,6 +11,8 @@ Note that all updated documentation for 2027 WPILib changes, new features, etc. 
 
 [Systemcore Cables PDF](https://downloads.limelightvision.io/documents/systemcore_motioncore_cable_specifications.pdf)
 
+[Systemcore CAD Download](https://docs.limelightvision.io/docs/resources/downloads#cad)
+
 [A301 Details](A301.md)
 
 
