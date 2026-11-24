@@ -48,7 +48,7 @@ Systemcore units originally shipped to teams during the initial FRC Alpha test a
 * [PhotonLib](PhotonVision.md)
 * [ThriftyLib](ThriftyLib.md)
 * [LimelightLib2](LimelightVision.md)
-* [YASS (YAMS)](YASS.md)
+* [YASS (YAGSL/YAMS)](YASS.md)
 * [Grapple Robotics](Grapple.md)
 
 ### Other
@@ -82,8 +82,8 @@ Systemcore units originally shipped to teams during the initial FRC Alpha test a
 | AdvantageKit | v27.0.0-alpha-3 | v27.0.0-alpha-4 | v27.0.0-alpha-5 to v27.0.0-alpha-7 |
 | ThriftyLib | :x: | v2027.0.0-alpha-1 | 2027.0.0-alpha-5 |
 | LimelightLib2 | LimelightHelpers | [LimelightLib-alpha-5-6](https://limelightvision.github.io/limelightlib-public/LimelightLib-alpha5-6.json) | [LimelightLib-alpha7](https://limelightvision.github.io/limelightlib-public/LimelightLib-alpha7.json) |
-| YAMS | :x: | :x: | 2026.11.06 |
-| YAGSL | :x: | :x: | 2026.11.06 |
+| YAMS | :x: | :x: | 2026.11.24 |
+| YAGSL | :x: | :x: | 2026.11.24 |
 | Grapple | :x: | :x: | 27.0.0 |
 
 - :x: — No compatible release currently available for this WPILib version.

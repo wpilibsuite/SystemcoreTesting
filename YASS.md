@@ -29,11 +29,26 @@ Commands v3 (`org.wpilib.command3`, Java only):
 https://cdn.yassrobotics.com/yams_commands3.json
 ```
 
-These always point at the latest release. The latest release for WPILib v2027.0.0-alpha-7 is [v2026.11.06](https://github.com/Yet-Another-Software-Suite/YAMS/releases/tag/v2026.11.06); to pin it, use [yams_commands2-2026.11.06.json](https://cdn.yassrobotics.com/yams_commands2-2026.11.06.json) or [yams_commands3-2026.11.06.json](https://cdn.yassrobotics.com/yams_commands3-2026.11.06.json).
+These always point at the latest release. The latest release for WPILib v2027.0.0-alpha-7 is [v2026.11.24](https://github.com/Yet-Another-Software-Suite/YAMS/releases/tag/v2026.11.24); to pin it, use [yams_commands2-2026.11.24.json](https://cdn.yassrobotics.com/yams_commands2-2026.11.24.json) or [yams_commands3-2026.11.24.json](https://cdn.yassrobotics.com/yams_commands3-2026.11.24.json). The [changelog](https://yams.yassrobotics.com/changelog) lists what changed in each release.
 
-YAMS v2026.11.06 uses REVLib 2027.0.0-alpha-9 and ThriftyLib 2027.0.0-alpha-6. If your project has REVLib or ThriftyLib, update them too. YAMS v2026.11.06 also expects SPARK MAX and SPARK Flex firmware 27.0.0.
+YAMS v2026.11.24 uses REVLib 2027.0.0-alpha-9 and ThriftyLib 2027.0.0-alpha-6. If your project has REVLib or ThriftyLib, update them too. YAMS v2026.11.24 also expects SPARK MAX and SPARK Flex firmware 27.0.0.
 
-Example robot projects for both frameworks are in [examples/commands2](https://github.com/Yet-Another-Software-Suite/YAMS/tree/master/examples/commands2) and [examples/commands3](https://github.com/Yet-Another-Software-Suite/YAMS/tree/master/examples/commands3).
+Example robot projects for both frameworks are in [examples/commands2](https://github.com/Yet-Another-Software-Suite/YAMS/tree/master/examples/commands2) and [examples/commands3](https://github.com/Yet-Another-Software-Suite/YAMS/tree/master/examples/commands3), and attached to each release ready to download.
+
+### ADRC
+
+YAMS has ADRC (Active Disturbance Rejection Control), written by FRC Team 8331, as an alternative to a PID and feedforward on every motor controller. It estimates gravity, friction, back-EMF and outside loads as one disturbance and cancels it, so there is no kS, kV, kG or kA to tune: give it the moment of inertia and a settling time.
+
+```java
+SmartMotorControllerConfig config = new SmartMotorControllerConfig(this)
+    .withMomentOfInertia(Inches.of(18), Pounds.of(8))
+    .withClosedLoopControllerMaximumVoltage(Volts.of(12))
+    .withADRCController(new ADRCConfig()
+        .withSystemOrder(SystemOrder.ARM)
+        .withSettlingTime(Seconds.of(0.6)));
+```
+
+ADRC runs on the Systemcore. See [How do I use ADRC instead of PID?](https://yams.yassrobotics.com/documentation/how-to-tuning/how-do-i-use-adrc).
 
 ### Thrifty Nova
 
@@ -51,7 +66,7 @@ SmartMotorControllerConfig config = new SmartMotorControllerConfig(this)
 SmartMotorController motor = new NovaWrapper(new Nova(0, 3, MotorType.NEO), DCMotor.getNEO(1), config);
 ```
 
-The Nova runs its own closed loop where it can: a PID, with or without a trapezoidal position profile, and the feedforward's kS, kV, kA and kG. An LQR, an exponential profile, a velocity trapezoidal profile, and an encoder setup the Nova can't wrap run on the Systemcore instead, with no change to your config. `getClosedLoopControllerPeriod()` says where it runs: 1 ms on the Nova, or the closed loop control period on the Systemcore.
+The Nova runs its own closed loop where it can: a PID, and a trapezoidal position profile with its feedforward's kS, kV, kA and kG. The Nova only applies a feedforward in a motion profile, so a feedforward without a trapezoidal profile runs on the Systemcore, with the PID, and a YAMS alert says why. That, an LQR, an ADRC, an exponential profile, a velocity trapezoidal profile, and an encoder setup the Nova can't wrap run on the Systemcore instead, with no change to your config. `getClosedLoopControllerPeriod()` says where it runs: 1 ms on the Nova, or the closed loop control period on the Systemcore.
 
 When the Nova runs the closed loop, only `SLOT_0` and `SLOT_1` exist, mechanism limits need both an upper and a lower limit, and `withTemperatureCutoff`, `withClosedLoopControllerMaximumVoltage`, `withFeedbackSynchronizationThreshold` and `withClosedLoopControlPeriod` are rejected, since only the Systemcore's closed loop applies them.
 
@@ -67,7 +82,7 @@ YAMS drives FIRST's A301 smart motor through `A301Wrapper` (`yams.core.motorcont
 SmartMotorController motor = new A301Wrapper(new A301(CANPorts.fromBusId(1), 20), config);
 ```
 
-The [A301 arm example](https://github.com/Yet-Another-Software-Suite/YAMS/releases/tag/v2026.11.06) runs in simulation, in Commands v2 and v3.
+The [A301 arm example](https://github.com/Yet-Another-Software-Suite/YAMS/releases/tag/v2026.11.24) runs in simulation, in Commands v2 and v3.
 
 ### Migrating from 2026 YAMS
 
@@ -130,24 +145,16 @@ import yams.core.motorcontrollers.enums.MotorMode;
 config.withZeroPower(MotorMode.BRAKE);
 ```
 
-#### Updating from YAMS v2026.10.09
+#### Other changes from 2026
 
-If you already moved to YAMS 2027, see [Updating from v2026.10.09 to v2026.10.15](https://github.com/Yet-Another-Software-Suite/YAMS/blob/master/MIGRATION.md#updating-from-v20261009-to-v20261015) for everything that changed. The changes most likely to affect you:
-
-- `EasyCRTConfig` is removed. `EasyCRT` takes the three tooth counts and solves the two readings: `new EasyCRT(100, 19, 21).solve(encoderA, encoderB)`.
-- An `ArmFeedforward`'s kV and kA are per rotation on the Systemcore closed loop too, as they already were on the Talons and SPARKs. If you tuned an arm's kV or kA on a Thrifty Nova, multiply them by 2π.
-- `withTemperatureCutoff(...)` is only accepted where the Systemcore closed loop checks it: with an exponential profile or LQR on a SPARK, and with LQR on a TalonFX or TalonFXS.
-- `SwerveModule.lock(...)` is renamed to `setAzimuthAngle(...)`.
-
-#### Updating from YAMS v2026.10.15
-
-See the [YAMS migration guide](https://github.com/Yet-Another-Software-Suite/YAMS/blob/master/MIGRATION.md#updating-from-v20261015-to-v20261103) for everything that changed up to v2026.11.06. The changes most likely to affect you:
-
-- Flash SPARK MAX and SPARK Flex firmware 27.0.0, and update REVLib to 2027.0.0-alpha-9 and ThriftyLib to 2027.0.0-alpha-6. The firmware changes how followers, kS at a velocity setpoint of 0, and SPARK MAX alternate and absolute encoders behave, so check your gains.
+- Flash SPARK MAX and SPARK Flex firmware 27.0.0. It changes how followers, kS at a velocity setpoint of 0, and SPARK MAX alternate and absolute encoders behave, so check your gains.
 - `withExternalEncoderDiscontinuityPoint(...)` is replaced by wrapping. `withWrapping(min, max)` sets the range an absolute encoder reads, and `withContinuousWrapping(min, max)` also makes the closed loop take the shortest path. Replace `.withExternalEncoderDiscontinuityPoint(Rotations.of(0.5))` with `.withWrapping(Rotations.of(-0.5), Rotations.of(0.5))`.
-- The Thrifty Nova runs its own closed loop where it can (see [Thrifty Nova](#thrifty-nova)), so retune a Nova mechanism's gains.
+- `EasyCRTConfig` is removed. `EasyCRT` takes the three tooth counts and solves the two readings: `new EasyCRT(100, 19, 21).solve(encoderA, encoderB)`.
+- Set a motor config's moment of inertia once. `withMomentOfInertia(...)`, `withWheelMomentOfInertia(...)` and the arm or flywheel `withExponentialProfile(...)` all set it, and a second call throws.
 - `getRelativeMechanismPosition()` is replaced by `getPose3d()` on every mechanism, which returns the mechanism's `Pose3d` relative to the robot for an AdvantageScope robot model.
-- The `SwerveDrive` tuning command moved to `NT:/Tuning/<name>/Live Tuning`, like every other mechanism's, and now pauses the default drive command while it runs.
+- `SwerveModule.lock(...)` is renamed to `setAzimuthAngle(...)`.
+- `withTemperatureCutoff(...)` is only accepted where the Systemcore closed loop checks it.
+- The `SwerveDrive` tuning command is at `NT:/Tuning/<name>/Live Tuning`, like every other mechanism's, and pauses the default drive command while it runs.
 
 #### Live Tuning is opt-in
 
@@ -187,9 +194,9 @@ Commands v3 (`org.wpilib.command3`, Java only):
 https://cdn.yassrobotics.com/yagsl_commands3.json
 ```
 
-These always point at the latest release. The latest release for WPILib v2027.0.0-alpha-7 is [v2026.11.06](https://github.com/Yet-Another-Software-Suite/YAGSL/releases/tag/v2026.11.06); to pin it, use [yagsl_commands2-2026.11.06.json](https://cdn.yassrobotics.com/yagsl_commands2-2026.11.06.json) or [yagsl_commands3-2026.11.06.json](https://cdn.yassrobotics.com/yagsl_commands3-2026.11.06.json).
+These always point at the latest release. The latest release for WPILib v2027.0.0-alpha-7 is [v2026.11.24](https://github.com/Yet-Another-Software-Suite/YAGSL/releases/tag/v2026.11.24); to pin it, use [yagsl_commands2-2026.11.24.json](https://cdn.yassrobotics.com/yagsl_commands2-2026.11.24.json) or [yagsl_commands3-2026.11.24.json](https://cdn.yassrobotics.com/yagsl_commands3-2026.11.24.json).
 
-Each YAGSL vendordep only requires the matching YAMS vendordep (`yams_commands2.json` or `yams_commands3.json`). Every other vendor library is optional: install REVLib, Phoenix6, ReduxLib or ThriftyLib only if your configuration uses that vendor's devices. YAGSL loads a vendor's devices only when your JSON configuration asks for them. YAGSL v2026.11.06 uses YAMS v2026.11.06.
+Each YAGSL vendordep only requires the matching YAMS vendordep (`yams_commands2.json` or `yams_commands3.json`). Every other vendor library is optional: install REVLib, Phoenix6, ReduxLib or ThriftyLib only if your configuration uses that vendor's devices. YAGSL loads a vendor's devices only when your JSON configuration asks for them. YAGSL v2026.11.24 uses YAMS v2026.11.24.
 
 AmLib devices are not supported yet in the 2027 alpha, since AndyMark has not published a 2027_alpha7 vendordep. Example robot projects for both frameworks are in [examples/commands2](https://github.com/Yet-Another-Software-Suite/YAGSL/tree/main/examples/commands2) and [examples/commands3](https://github.com/Yet-Another-Software-Suite/YAGSL/tree/main/examples/commands3).
 
@@ -208,22 +215,24 @@ Every device in the configuration (each module's `drive` and `angle` motors and 
 
 | `canbus` | CAN bus |
 | --- | --- |
-| `""` (empty) | `can_s0` |
+| `""` (empty) or `"0"` | `can_s0` |
 | `"1"`, `"2"`, `"3"`, `"4"` | `can_s1`, `can_s2`, `can_s3`, `can_s4` |
+| `"5"` to `"24"` | Motioncore `can_d0` to `can_d19` |
+| `"CAN_S0"` to `"CAN_S4"`, `"CAN_D0"` to `"CAN_D19"` | The same buses by name |
 
-CTRE devices (`talonfx`, `talonfxs`, `cancoder`, `pigeon2`) can also be on a CANivore: set `canbus` to the CANivore's name. Every other vendor only takes a bus number, and [config.yagsl.com](http://config.yagsl.com) flags anything else.
+CTRE devices (`talonfx`, `talonfxs`, `cancoder`, `pigeon2`) can also be on a CANivore: set `canbus` to the CANivore's name. Every other vendor only takes a bus number or name, and [config.yagsl.com](http://config.yagsl.com) flags anything else.
 
-CTRE devices with an empty `canbus` are on `can_s0` like every other vendor, even though Phoenix 6 on its own defaults to `can_s2`. If a configuration names a Systemcore CAN bus, such as `"can_s1"` or `"socketcan:can_s1"`, change it to the bus number, `"1"`.
+CTRE devices with an empty `canbus` are on `can_s0` like every other vendor, even though Phoenix 6 on its own defaults to `can_s2`. If a configuration names a Systemcore CAN bus as `"can_s1"` or `"socketcan:can_s1"`, change it to `"1"` or `"CAN_S1"`.
 
-**Thrifty Nova:** supported again through the YAMS `NovaWrapper`; install the [ThriftyLib vendordep](https://software.thethriftybot.com/frcvendor/ThriftyLib-2027.json) to use it. A Nova is `nova_` followed by its motor: `nova_neo`, `nova_neo2`, `nova_neo550`, `nova_vortex`, `nova_minion` or `nova_pulsar`. An absolute encoder attached to the Nova's data port (for example `revthroughbore_attached`) is used as the module's external feedback encoder, and attached analog encoders work too. A Nova angle motor with a CAN absolute encoder, such as `cancoder_can`, works like a SPARK MAX with one. The Nova runs the module's closed loop, wrapping and feedforward itself.
+**Thrifty Nova:** supported again through the YAMS `NovaWrapper`; install the [ThriftyLib vendordep](https://software.thethriftybot.com/frcvendor/ThriftyLib-2027.json) to use it. A Nova is `nova_` followed by its motor: `nova_neo`, `nova_neo2`, `nova_neo550`, `nova_vortex`, `nova_minion` or `nova_pulsar`. An absolute encoder attached to the Nova's data port (for example `revthroughbore_attached`) is used as the module's external feedback encoder, and attached analog encoders work too. A Nova angle motor with a CAN absolute encoder, such as `cancoder_can`, works like a SPARK MAX with one. YAGSL gives each module motor a feedforward and no motion profile, and the Nova only applies a feedforward in a motion profile, so a Nova module's closed loop runs on the Systemcore and YAMS raises an alert saying so.
 
-**Studica NavX3:** `navx3_can` works with StudicaLib 2027.0.0-alpha-1; install the [StudicaLib vendordep](https://dev.studica.com/maven/release/2027/json/StudicaLib.json) to use it. Its `canbus` is a Systemcore CAN bus number, like every other vendor's.
+**Studica NavX3:** `navx3_can` works with StudicaLib 2027.0.0-alpha-1; install the [StudicaLib vendordep](https://dev.studica.com/maven/release/2027/json/StudicaLib.json) to use it. Its `canbus` is a Systemcore CAN bus number, like every other vendor's. A NavX3 plugged into a Systemcore USB port is `navx3_usb`, with the port (0 to 3) in `channel`.
 
 **Systemcore IMU:** the Systemcore's built in IMU can be the gyro, with the type `systemcore_internal`. It is part of WPILib, so it needs no vendordep and no `id` or `canbus`.
 
 ### Migrating from 2026 YAGSL
 
-These notes compare against YAGSL 2026.4.1.
+These notes compare against YAGSL 2026.4.1. These are the highlights; see [MIGRATION.md](https://github.com/Yet-Another-Software-Suite/YAGSL/blob/main/MIGRATION.md) for the full guide, including the hardware that has no 2027 support.
 
 #### YAGSL is now built on YAMS
 
