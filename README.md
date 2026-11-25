@@ -53,7 +53,7 @@ Systemcore units originally shipped to teams during the initial FRC Alpha test a
 
 ### Other
 
-* [AdvantageScope 2027 Alpha](AdvantageScope.md)
+* [AdvantageScope 2027 Beta](AdvantageScope.md)
 * [Elastic 2027 Alpha](Elastic.md)
 
 ### Software Compatibility
