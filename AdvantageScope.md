@@ -1,8 +1,13 @@
-# AdvantageScope 2027 Alpha
+# AdvantageScope 2027 Beta
 
-**Downloads for the 2027 alpha releases of AdvantageScope can be found [here](https://github.com/Mechanical-Advantage/AdvantageScope/releases) (find the first release with version v27.0.0-alpha-X).** The changelog below lists the available releases along with related compatibility information. See also the [known issues](#known-issues) section below.
+**Downloads for the 2027 beta releases of AdvantageScope can be found [here](https://github.com/Mechanical-Advantage/AdvantageScope/releases) (find the first release with version v27.0.0-beta-X).**
 
-### [v27.0.0-alpha-6](https://github.com/Mechanical-Advantage/AdvantageScope/releases/tag/v27.0.0-alpha-6)
+An overview of AdvantageScope 2027 can be found in the [documentation](https://docs.advantagescope.org/whats-new), and each GitHub release includes detailed release notes.
+
+> [!WARNING]
+> The changelog below lists historical _alpha_ releases along with related compatibility information, but **new users should download the latest 2027 _beta_** as described above. See also the [known issues](#known-issues) section below.
+
+### v27.0.0-alpha-6
 
 - Updated Driver Station keys to new layout ([#550](https://github.com/Mechanical-Advantage/AdvantageScope/pull/550), @ThadHouse)
 - Added preference for timestamp display mode (see the "Timestamps" documentation page)
@@ -27,7 +32,7 @@
 - Fixed support for mDNS robot addresses when downloading logs
 - Fixed tabbing controls in the source list help window
 
-### [v27.0.0-alpha-5](https://github.com/Mechanical-Advantage/AdvantageScope/releases/tag/v27.0.0-alpha-5)
+### v27.0.0-alpha-5
 
 - Added AdvantageScope Lite for the FIRST Driver Station with simplified features and a built-in layout ([#543](https://github.com/Mechanical-Advantage/AdvantageScope/pull/543))
 - Added "Driver Station" live mode for connecting to the FIRST Driver Station, supported on both desktop and the DS distribution of AdvantageScope Lite
@@ -70,7 +75,7 @@
 
 </details>
 
-### [v27.0.0-alpha-4](https://github.com/Mechanical-Advantage/AdvantageScope/releases/tag/v27.0.0-alpha-4)
+### v27.0.0-alpha-4
 
 - Added support for uploading assets through AdvantageScope Lite (#411)
 - Improve the reliability of keyboard shortcuts in AdvantageScope Lite (#390)
@@ -93,7 +98,7 @@ _The following changes are also available in [v26.0.0-beta-1](https://github.com
 - Fixed a bug causing incorrectly filtered values to be displayed in the line graph legend (#414)
 - Fixed an issue causing some very large WPILOGs to fail to open (#406)
 
-### [v27.0.0-alpha-3](https://github.com/Mechanical-Advantage/AdvantageScope/releases/tag/v27.0.0-alpha-3)
+### v27.0.0-alpha-3
 
 _The following changes are also available in [v26.0.0-beta-1](https://github.com/Mechanical-Advantage/AdvantageScope/releases/tag/v26.0.0-beta-1):_
 
@@ -103,7 +108,7 @@ _The following changes are also available in [v26.0.0-beta-1](https://github.com
 - Fixed edge cases when resizing controls pane
 - Fixed visual glitches when switching line graph styles
 
-### [v27.0.0-alpha-2](https://github.com/Mechanical-Advantage/AdvantageScope/releases/tag/v27.0.0-alpha-2)
+### v27.0.0-alpha-2
 
 _The following changes are also available in [v26.0.0-beta-1](https://github.com/Mechanical-Advantage/AdvantageScope/releases/tag/v26.0.0-beta-1):_
 
@@ -115,7 +120,7 @@ _The following changes are also available in [v26.0.0-beta-1](https://github.com
 - Fixed handling of `ELECTRON_RUN_AS_NODE` environment variable
 - Fixed rendering of very large raw and array values
 
-### [v27.0.0-alpha-1](https://github.com/Mechanical-Advantage/AdvantageScope/releases/tag/v27.0.0-alpha-1)
+### v27.0.0-alpha-1
 
 - Added support for AdvantageScope Lite ([docs](https://docs.advantagescope.org/more-features/advantagescope-lite))
 - Added log downloading support for Systemcore using SFTP
@@ -153,9 +158,11 @@ _The following changes are also available in [v26.0.0-beta-1](https://github.com
 
 Most users should use the "NetworkTables" or "NetworkTables (AdvantageKit)" live modes to connect directly to robot code, where these features are supported. This issue will be fixed in a future release.
 
-### URCL is not supported
+### ~~URCL is not supported~~
 
-There is currently no 2027 alpha release for [URCL](https://docs.advantagescope.org/more-features/urcl). We will have more details to share about logging options in 2027 and beyond at a later date.
+_See [universal logging](https://docs.advantagescope.org/more-features/universal-logging)_
+
+~~There is currently no 2027 alpha release for [URCL](https://docs.advantagescope.org/more-features/urcl). We will have more details to share about logging options in 2027 and beyond at a later date.~~
 
 ### ~~Joystick visualization with POVs is inaccurate~~
 
